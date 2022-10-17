@@ -1,0 +1,108 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "SIVIG api",
+    "version": "1.0.0",
+    "description": "api generada para el proyecto SIVIG"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Local server"
+    }
+  ],
+  "tags": [
+    {
+      "name": "users",
+      "description": "Administracion de usuarios"
+    }
+  ],
+  "paths": {
+    "/users/login": {
+      "post": {
+        "tags": ["users"],
+        "summary": "Login de usuarios",
+        "description": "Login de usuarios",
+        "operationId": "login",
+
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/login"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login exitoso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/login_response"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Error en el login"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "login": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "type": "string",
+            "description": "usuario",
+            "example": "danilo"
+          },
+          "password": {
+            "type": "string",
+            "description": "Contraseña del usuario",
+            "example": "123456"
+          }
+        }
+      },
+      "login_response": {
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "string",
+            "description": "respuesta del servidor"
+          },
+          "msg": {
+            "type": "string",
+            "description": "mensaje del servidor"
+          },
+          "token": {
+            "type": "string",
+            "description": "token de autenticación"
+          }
+        }
+      },
+      "apiResponse": {
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "string",
+            "description": "respuesta del servidor"
+          },
+          "msg": {
+            "type": "string",
+            "description": "mensaje del servidor"
+          },
+          "err": {
+            "type": "string",
+            "description": "error del servidor"
+          }
+        }
+      }
+    }
+  }
+}
