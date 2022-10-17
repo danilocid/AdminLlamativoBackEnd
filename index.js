@@ -5,9 +5,9 @@ const Server = require("http").createServer(app);
 const swaggerUi = require("swagger-ui-express");
 const swaggerDocument = require("./swagger.json");
 
-Server.listen(3000, () => {
+Server.listen(8080, () => {
   console.clear();
-  console.log("Server is running on port 3000");
+  console.log("Server is running on port 8080");
 });
 app.use(cors());
 app.use(express.json());
