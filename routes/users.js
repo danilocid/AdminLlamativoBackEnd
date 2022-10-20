@@ -1,11 +1,10 @@
 const { Router } = require("express");
 const { check } = require("express-validator");
 const { validator } = require("../utils/validator");
-const { jwtGenerator } = require("../utils/jwt");
 const JWTvalidator = require("../utils/jwt-validator");
 
 const router = Router();
-const { login } = require("../controllers/users");
+const { login, renewToken } = require("../controllers/users");
 
 router.post(
   "/login",
@@ -15,6 +14,12 @@ router.post(
   ],
   validator,
   login
+);
+router.post(
+  "/renew",
+  [check("token").not().isEmpty().withMessage("El token es requerido")],
+  JWTvalidator,
+  renewToken
 );
 
 module.exports = router;

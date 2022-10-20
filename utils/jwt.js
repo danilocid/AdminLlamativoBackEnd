@@ -7,7 +7,7 @@ const jwtGenerator = (uid) => {
       uid,
     };
     const options = {
-      expiresIn: "48h",
+      expiresIn: "5m",
     };
     jwt.sign(payload, process.env.JWT_SECRET, options, (err, token) => {
       if (err) {
@@ -21,13 +21,4 @@ const jwtGenerator = (uid) => {
   });
 };
 
-const jwtVerifier = (token) => {
-  try {
-    const { uid } = jwt.verify(token, process.env.JWT_SECRET);
-    return [true, uid];
-  } catch (error) {
-    return [false, null];
-  }
-};
-
-module.exports = { jwtGenerator, jwtVerifier };
+module.exports = { jwtGenerator };

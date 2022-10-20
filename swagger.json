@@ -7,7 +7,7 @@
   },
   "servers": [
     {
-      "url": "http://localhost:3000",
+      "url": "http://localhost:8080",
       "description": "Local server"
     }
   ],
@@ -50,6 +50,47 @@
           }
         }
       }
+    },
+    "/users/renew": {
+      "post": {
+        "tags": ["users"],
+        "summary": "Renovar token",
+        "description": "Renovar token",
+        "operationId": "renew",
+        "requestBody": {
+          "description": "user to add to the system",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "token": {
+                    "type": "string",
+                    "example": "token"
+                  }
+                }
+              }
+            }
+          }
+        },
+
+        "responses": {
+          "200": {
+            "description": "Renovacion exitosa",
+
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/renew_response"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Error en la renovacion"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -83,6 +124,26 @@
           "token": {
             "type": "string",
             "description": "token de autenticación"
+          }
+        }
+      },
+      "renew_response": {
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "string",
+            "description": "respuesta del servidor",
+            "example": "true"
+          },
+          "msg": {
+            "type": "string",
+            "description": "mensaje del servidor",
+            "example": "Token renovado"
+          },
+          "token": {
+            "type": "string",
+            "description": "token de autenticación",
+            "example": "tokengeneradornueva"
           }
         }
       },
