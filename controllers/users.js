@@ -52,8 +52,6 @@ const login = async (req, res = response) => {
 
 const renewToken = async (req, res = response) => {
   const userId = req.uid;
-
-  console.log(userId);
   const newToken = await jwtGenerator(userId);
   res.json({
     ok: true,

@@ -7,14 +7,12 @@ const jwtGenerator = (uid) => {
       uid,
     };
     const options = {
-      expiresIn: "5m",
+      expiresIn: "48h",
     };
     jwt.sign(payload, process.env.JWT_SECRET, options, (err, token) => {
       if (err) {
-        console.log(err);
         reject("no se pudo generar el token");
       } else {
-        console.log("Token generated");
         resolve(token);
       }
     });
