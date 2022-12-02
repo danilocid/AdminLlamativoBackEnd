@@ -1,10 +1,10 @@
 const { Router } = require("express");
 const { check } = require("express-validator");
 const { validator } = require("../utils/validator");
-const JWTvalidator = require("../utils/jwt-validator");
+const { JWTvalidator, JWTvalidatorHeader } = require("../utils/jwt-validator");
 
 const router = Router();
-const { login, renewToken } = require("../controllers/users");
+const { login, renewToken, getAllUsers } = require("../controllers/users");
 
 router.post(
   "/login",
@@ -21,5 +21,7 @@ router.post(
   JWTvalidator,
   renewToken
 );
+
+router.get("/AllUsers", JWTvalidatorHeader, getAllUsers);
 
 module.exports = router;

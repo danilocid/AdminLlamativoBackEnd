@@ -60,7 +60,34 @@ const renewToken = async (req, res = response) => {
   });
 };
 
+const getAllUsers = async (req, res = response) => {
+  const connection = DbConnection.initFunction();
+  const query = `SELECT * FROM users`;
+  connection.query(query, async (err, result) => {
+    if (err) {
+      console.log(err);
+      return res.status(500).json({
+        ok: false,
+        msg: "Error al consultar la base de datos",
+        err,
+      });
+    }
+    if (result.length === 0) {
+      return res.status(401).json({
+        ok: false,
+        msg: "No hay usuarios registrados",
+      });
+    }
+    return res.status(200).json({
+      ok: true,
+      msg: "Usuarios encontrados",
+      result,
+    });
+  });
+};
+
 module.exports = {
   login,
   renewToken,
+  getAllUsers,
 };

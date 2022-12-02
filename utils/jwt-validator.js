@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 const JWTvalidator = (req, res = response, next) => {
   const token = req.body.token;
   if (!token) {
-    return res.status(200).json({
+    return res.status(401).json({
       ok: false,
       msg: "No hay token",
     });
@@ -14,11 +14,32 @@ const JWTvalidator = (req, res = response, next) => {
     req.uid = uid;
     next();
   } catch (error) {
-    return res.status(200).json({
+    return res.status(401).json({
+      ok: false,
+      msg: "Token no valido",
+    });
+  }
+};
+const JWTvalidatorHeader = (req, res = response, next) => {
+  const token = req.header("bearer");
+  console.log(token);
+  //const token = req.body.token;
+  if (!token) {
+    return res.status(401).json({
+      ok: false,
+      msg: "No hay token",
+    });
+  }
+  try {
+    const { uid } = jwt.verify(token, process.env.JWT_SECRET);
+    req.uid = uid;
+    next();
+  } catch (error) {
+    return res.status(401).json({
       ok: false,
       msg: "Token no valido",
     });
   }
 };
 
-module.exports = JWTvalidator;
+module.exports = { JWTvalidator, JWTvalidatorHeader };
