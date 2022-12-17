@@ -1,9 +1,9 @@
-const { response } = require("express");
-var DbConnection = require("../utils/conexionBD");
-const { jwtGenerator } = require("../utils/jwt");
+var jwt = require("json-web-token");
+var DbConnection = require("../util/dbConnection");
+const { jwtGenerator } = require("../util/jwt");
 const bcrypt = require("bcryptjs");
 
-const login = async (req, res = response) => {
+exports.login = function (req, res) {
   const { user, password } = req.body;
   try {
     const salt = bcrypt.genSaltSync(10);
@@ -20,6 +20,7 @@ const login = async (req, res = response) => {
       });
     }
     if (result.length === 0) {
+      console.log("Usuario no encontrado");
       return res.status(401).json({
         ok: false,
         msg: "Usuario o contraseña incorrectos",
@@ -41,6 +42,7 @@ const login = async (req, res = response) => {
           token,
         });
       } else {
+        console.error("Contraseña incorrecta");
         return res.status(401).json({
           ok: false,
           msg: "Usuario o contraseña incorrectos",
@@ -48,46 +50,4 @@ const login = async (req, res = response) => {
       }
     });
   });
-};
-
-const renewToken = async (req, res = response) => {
-  const userId = req.uid;
-  const newToken = await jwtGenerator(userId);
-  res.json({
-    ok: true,
-    msg: "Token renovado",
-    token: newToken,
-  });
-};
-
-const getAllUsers = async (req, res = response) => {
-  const connection = DbConnection.initFunction();
-  const query = `SELECT * FROM users`;
-  connection.query(query, async (err, result) => {
-    if (err) {
-      console.log(err);
-      return res.status(500).json({
-        ok: false,
-        msg: "Error al consultar la base de datos",
-        err,
-      });
-    }
-    if (result.length === 0) {
-      return res.status(401).json({
-        ok: false,
-        msg: "No hay usuarios registrados",
-      });
-    }
-    return res.status(200).json({
-      ok: true,
-      msg: "Usuarios encontrados",
-      result,
-    });
-  });
-};
-
-module.exports = {
-  login,
-  renewToken,
-  getAllUsers,
 };
