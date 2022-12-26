@@ -1,9 +1,28 @@
 const functions = require("firebase-functions");
-const cors = require("cors")({ origin: "*", setHeaders: true });
+const async = require("async");
+const cors = require("cors")({
+  origin: "*",
+  origin: "https://localhost:4200",
+  origin: "https://sivig-ae865.web.app",
+  origin: "https://sivig-ae865.firebaseapp.com",
+  origin: "*",
+  credentials: true,
+});
 var login = require("./controller/loginController");
+var products = require("./controller/productsController");
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
 exports.login = functions.https.onRequest((request, response) => {
   cors(request, response, () => {
     login.login(request, response);
+  });
+});
+
+//products
+// all products with token
+exports.productsGetAll = functions.https.onRequest((request, response) => {
+  cors(request, response, () => {
+    products.getAllProducts(request, response);
   });
 });

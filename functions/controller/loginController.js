@@ -1,4 +1,3 @@
-var jwt = require("json-web-token");
 var DbConnection = require("../util/dbConnection");
 const { jwtGenerator } = require("../util/jwt");
 const bcrypt = require("bcryptjs");
@@ -20,7 +19,6 @@ exports.login = function (req, res) {
       });
     }
     if (result.length === 0) {
-      console.log("Usuario no encontrado");
       return res.status(401).json({
         ok: false,
         msg: "Usuario o contraseña incorrectos",
@@ -42,7 +40,6 @@ exports.login = function (req, res) {
           token,
         });
       } else {
-        console.error("Contraseña incorrecta");
         return res.status(401).json({
           ok: false,
           msg: "Usuario o contraseña incorrectos",
