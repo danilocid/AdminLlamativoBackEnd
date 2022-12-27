@@ -26,3 +26,10 @@ exports.productsGetAll = functions.https.onRequest((request, response) => {
     products.getAllProducts(request, response);
   });
 });
+
+// product by id with token
+exports.productsGetById = functions.https.onRequest((request, response) => {
+  cors(request, response, () => {
+    products.getProduct(request, response);
+  });
+});
