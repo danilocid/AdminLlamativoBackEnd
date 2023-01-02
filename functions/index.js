@@ -33,3 +33,10 @@ exports.productsGetById = functions.https.onRequest((request, response) => {
     products.getProduct(request, response);
   });
 });
+
+//edit product with token
+exports.productsUpdate = functions.https.onRequest((request, response) => {
+  cors(request, response, () => {
+    products.updateProduct(request, response);
+  });
+});
