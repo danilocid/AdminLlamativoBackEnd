@@ -189,3 +189,97 @@ exports.updateProduct = function (req, res) {
     }
   }
 };
+
+exports.createProduct = function (req, res) {
+  // validate token
+  const token = req.headers.token;
+  const cod_interno = req.body.cod_interno;
+  const cod_barras = req.body.cod_barras;
+  const descripcion = req.body.descripcion;
+  const costo_neto = req.body.costo_neto;
+  const costo_imp = req.body.costo_imp;
+  const venta_neto = req.body.venta_neto;
+  const venta_imp = req.body.venta_imp;
+  const stock_critico = req.body.stock_critico;
+  const activo = req.body.activo;
+  if (token === undefined) {
+    return res.status(403).json({
+      ok: false,
+      msg: "No hay token",
+    });
+  } else if (
+    cod_interno === undefined ||
+    cod_interno === null ||
+    cod_interno === "" ||
+    cod_barras === undefined ||
+    cod_barras === null ||
+    cod_barras === "" ||
+    descripcion === undefined ||
+    descripcion === null ||
+    descripcion === "" ||
+    costo_neto === undefined ||
+    costo_neto === null ||
+    costo_neto === "" ||
+    costo_imp === undefined ||
+    costo_imp === null ||
+    costo_imp === "" ||
+    venta_neto === undefined ||
+    venta_neto === null ||
+    venta_neto === "" ||
+    venta_imp === undefined ||
+    venta_imp === null ||
+    venta_imp === "" ||
+    stock_critico === undefined ||
+    stock_critico === null ||
+    stock_critico === "" ||
+    activo === undefined ||
+    activo === null ||
+    activo === ""
+  ) {
+    return res.status(401).json({
+      ok: false,
+      msg: "Todos los campos son requeridos",
+    });
+  } else {
+    try {
+      const { uid } = jwt.verify(token, process.env.JWT_SECRET);
+      req.uid = uid;
+      console.log("uid: " + uid);
+      const connection = DbConnection.initFunction();
+      const query = `INSERT INTO articulos (cod_interno, cod_barras, descripcion, costo_neto, costo_imp, venta_neto, venta_imp, stock_critico, stock, activo, created_at, updated_at) VALUES ('${cod_interno}', '${cod_barras}', '${descripcion}', '${costo_neto}', '${costo_imp}', '${venta_neto}', '${venta_imp}', '${stock_critico}', 0, '${activo}', NOW(), NOW())`;
+      connection.query(query, (err, result) => {
+        if (err) {
+          if (err.code === "ER_DUP_ENTRY") {
+            return res.status(401).json({
+              ok: false,
+              msg: "Ya existe un producto con ese codigo interno o codigo de barras",
+              err,
+            });
+          }
+          return res.status(500).json({
+            ok: false,
+            msg: "Error al consultar la base de datos",
+            err,
+          });
+        }
+        if (result.length === 0) {
+          return res.status(401).json({
+            ok: false,
+            msg: "No hay productos",
+          });
+        }
+        return res.status(200).json({
+          ok: true,
+          msg: "Producto creado",
+          result,
+        });
+      });
+    } catch (error) {
+      console.log(error);
+      return res.status(403).json({
+        ok: false,
+        msg: "Token no valido",
+      });
+    }
+  }
+};

@@ -40,3 +40,10 @@ exports.productsUpdate = functions.https.onRequest((request, response) => {
     products.updateProduct(request, response);
   });
 });
+
+//create product with token
+exports.productsCreate = functions.https.onRequest((request, response) => {
+  cors(request, response, () => {
+    products.createProduct(request, response);
+  });
+});
