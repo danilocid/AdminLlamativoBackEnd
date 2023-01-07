@@ -12,7 +12,6 @@ var login = require("./controller/loginController");
 var products = require("./controller/productsController");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
-
 exports.login = functions.https.onRequest((request, response) => {
   cors(request, response, () => {
     login.login(request, response);
