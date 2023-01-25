@@ -21,7 +21,7 @@ const JWTvalidator = (req, res = response, next) => {
   }
 };
 const JWTvalidatorHeader = (req, res = response, next) => {
-  const token = req.header("bearer");
+  const token = req.header("token");
   if (!token) {
     return res.status(403).json({
       ok: false,
