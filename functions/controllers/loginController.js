@@ -1,15 +1,15 @@
 var DbConnection = require("../util/dbConnection");
-const { jwtGenerator } = require("../util/jwt");
-const bcrypt = require("bcryptjs");
+var { jwtGenerator } = require("../util/jwt");
+var bcrypt = require("bcryptjs");
 
 exports.login = function (req, res) {
-  const { user, password } = req.body;
+  var { user, password } = req.body;
   try {
-    const salt = bcrypt.genSaltSync(10);
+    var salt = bcrypt.genSaltSync(10);
     passwordHash = bcrypt.hashSync(password, salt);
   } catch (error) {}
-  const connection = DbConnection.initFunction();
-  const query = `SELECT * FROM users WHERE user = '${user}' `;
+  var connection = DbConnection.initFunction();
+  var query = `SELECT * FROM users WHERE user = '${user}' `;
   connection.query(query, async (err, result) => {
     if (err) {
       return res.status(500).json({
@@ -33,7 +33,7 @@ exports.login = function (req, res) {
         });
       }
       if (compare) {
-        const token = await jwtGenerator(result[0].id);
+        var token = await jwtGenerator(result[0].id);
         return res.status(200).json({
           ok: true,
           msg: "Login correcto",

@@ -1,10 +1,10 @@
 var DbConnection = require("../util/dbConnection");
-const jwt = require("jsonwebtoken");
+var jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 exports.getAllProducts = function (req, res) {
   // validate token
-  const token = req.headers.token;
+  var token = req.headers.token;
   if (token === undefined) {
     return res.status(403).json({
       ok: false,
@@ -12,11 +12,11 @@ exports.getAllProducts = function (req, res) {
     });
   } else {
     try {
-      const { uid } = jwt.verify(token, process.env.JWT_SECRET);
+      var { uid } = jwt.verify(token, process.env.JWT_SECRET);
       req.uid = uid;
       console.log("uid: " + uid);
-      const connection = DbConnection.initFunction();
-      const query = `SELECT * FROM articulos`;
+      var connection = DbConnection.initFunction();
+      var query = `SELECT * FROM articulos`;
       connection.query(query, (err, result) => {
         if (err) {
           return res.status(500).json({
@@ -49,8 +49,8 @@ exports.getAllProducts = function (req, res) {
 
 exports.getProduct = function (req, res) {
   // validate token
-  const token = req.headers.token;
-  const id = req.body.id;
+  var token = req.headers.token;
+  var id = req.body.id;
   if (token === undefined) {
     return res.status(403).json({
       ok: false,
@@ -63,12 +63,12 @@ exports.getProduct = function (req, res) {
     });
   } else {
     try {
-      const { uid } = jwt.verify(token, process.env.JWT_SECRET);
+      var { uid } = jwt.verify(token, process.env.JWT_SECRET);
       req.uid = uid;
       console.log("uid: " + uid);
-      const connection = DbConnection.initFunction();
+      var connection = DbConnection.initFunction();
 
-      const query = `SELECT * FROM articulos WHERE id = ${id}`;
+      var query = `SELECT * FROM articulos WHERE id = ${id}`;
       connection.query(query, (err, result) => {
         if (err) {
           return res.status(500).json({
@@ -101,17 +101,17 @@ exports.getProduct = function (req, res) {
 
 exports.updateProduct = function (req, res) {
   // validate token
-  const token = req.headers.token;
-  const id = req.body.id;
-  const cod_interno = req.body.cod_interno;
-  const cod_barras = req.body.cod_barras;
-  const descripcion = req.body.descripcion;
-  const costo_neto = req.body.costo_neto;
-  const costo_imp = req.body.costo_imp;
-  const venta_neto = req.body.venta_neto;
-  const venta_imp = req.body.venta_imp;
-  const stock_critico = req.body.stock_critico;
-  const activo = req.body.activo;
+  var token = req.headers.token;
+  var id = req.body.id;
+  var cod_interno = req.body.cod_interno;
+  var cod_barras = req.body.cod_barras;
+  var descripcion = req.body.descripcion;
+  var costo_neto = req.body.costo_neto;
+  var costo_imp = req.body.costo_imp;
+  var venta_neto = req.body.venta_neto;
+  var venta_imp = req.body.venta_imp;
+  var stock_critico = req.body.stock_critico;
+  var activo = req.body.activo;
   if (token === undefined) {
     return res.status(403).json({
       ok: false,
@@ -155,11 +155,11 @@ exports.updateProduct = function (req, res) {
     });
   } else {
     try {
-      const { uid } = jwt.verify(token, process.env.JWT_SECRET);
+      var { uid } = jwt.verify(token, process.env.JWT_SECRET);
       req.uid = uid;
       console.log("uid: " + uid);
-      const connection = DbConnection.initFunction();
-      const query = `UPDATE articulos SET cod_interno = '${cod_interno}', cod_barras = '${cod_barras}', descripcion = '${descripcion}', costo_neto = '${costo_neto}', costo_imp = '${costo_imp}', venta_neto = '${venta_neto}', venta_imp = '${venta_imp}', stock_critico = '${stock_critico}', activo = '${activo}' WHERE id = ${id}`;
+      var connection = DbConnection.initFunction();
+      var query = `UPDATE articulos SET cod_interno = '${cod_interno}', cod_barras = '${cod_barras}', descripcion = '${descripcion}', costo_neto = '${costo_neto}', costo_imp = '${costo_imp}', venta_neto = '${venta_neto}', venta_imp = '${venta_imp}', stock_critico = '${stock_critico}', activo = '${activo}' WHERE id = ${id}`;
       connection.query(query, (err, result) => {
         if (err) {
           return res.status(500).json({
@@ -192,16 +192,16 @@ exports.updateProduct = function (req, res) {
 
 exports.createProduct = function (req, res) {
   // validate token
-  const token = req.headers.token;
-  const cod_interno = req.body.cod_interno;
-  const cod_barras = req.body.cod_barras;
-  const descripcion = req.body.descripcion;
-  const costo_neto = req.body.costo_neto;
-  const costo_imp = req.body.costo_imp;
-  const venta_neto = req.body.venta_neto;
-  const venta_imp = req.body.venta_imp;
-  const stock_critico = req.body.stock_critico;
-  const activo = req.body.activo;
+  var token = req.headers.token;
+  var cod_interno = req.body.cod_interno;
+  var cod_barras = req.body.cod_barras;
+  var descripcion = req.body.descripcion;
+  var costo_neto = req.body.costo_neto;
+  var costo_imp = req.body.costo_imp;
+  var venta_neto = req.body.venta_neto;
+  var venta_imp = req.body.venta_imp;
+  var stock_critico = req.body.stock_critico;
+  var activo = req.body.activo;
   if (token === undefined) {
     return res.status(403).json({
       ok: false,
@@ -242,11 +242,11 @@ exports.createProduct = function (req, res) {
     });
   } else {
     try {
-      const { uid } = jwt.verify(token, process.env.JWT_SECRET);
+      var { uid } = jwt.verify(token, process.env.JWT_SECRET);
       req.uid = uid;
       console.log("uid: " + uid);
-      const connection = DbConnection.initFunction();
-      const query = `INSERT INTO articulos (cod_interno, cod_barras, descripcion, costo_neto, costo_imp, venta_neto, venta_imp, stock_critico, stock, activo, created_at, updated_at) VALUES ('${cod_interno}', '${cod_barras}', '${descripcion}', '${costo_neto}', '${costo_imp}', '${venta_neto}', '${venta_imp}', '${stock_critico}', 0, '${activo}', NOW(), NOW())`;
+      var connection = DbConnection.initFunction();
+      var query = `INSERT INTO articulos (cod_interno, cod_barras, descripcion, costo_neto, costo_imp, venta_neto, venta_imp, stock_critico, stock, activo, created_at, updated_at) VALUES ('${cod_interno}', '${cod_barras}', '${descripcion}', '${costo_neto}', '${costo_imp}', '${venta_neto}', '${venta_imp}', '${stock_critico}', 0, '${activo}', NOW(), NOW())`;
       connection.query(query, (err, result) => {
         if (err) {
           if (err.code === "ER_DUP_ENTRY") {

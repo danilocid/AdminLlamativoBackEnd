@@ -1,13 +1,13 @@
-const { response } = require("express");
-const sequelize = require("../database/db");
+var { response } = require("express");
+var sequelize = require("../database/db");
 
-const Issue = require("../database/models/Issue");
-const IssueStatus = require("../database/models/IssueStatus");
-const IssueSection = require("../database/models/IssueSection");
-const IssueType = require("../database/models/IssueType");
+var Issue = require("../database/models/Issue");
+var IssueStatus = require("../database/models/IssueStatus");
+var IssueSection = require("../database/models/IssueSection");
+var IssueType = require("../database/models/IssueType");
 
-const getIssues = async (req, res = response) => {
-  const issues = await Issue.findAll({
+var getIssues = async (req, res = response) => {
+  var issues = await Issue.findAll({
     include: [
       {
         model: IssueStatus,
@@ -29,9 +29,9 @@ const getIssues = async (req, res = response) => {
   });
 };
 
-const getIssue = async (req, res = response) => {
-  const { id } = req.params;
-  const issue = await Issue.findOne({
+var getIssue = async (req, res = response) => {
+  var { id } = req.params;
+  var issue = await Issue.findOne({
     where: {
       id,
     },
@@ -52,10 +52,10 @@ const getIssue = async (req, res = response) => {
   });
 };
 
-const createIssue = async (req, res = response) => {
-  const { issue, id_section, id_status, id_type } = req.body;
+var createIssue = async (req, res = response) => {
+  var { issue, id_section, id_status, id_type } = req.body;
   try {
-    const issueDB = await Issue.create({
+    var issueDB = await Issue.create({
       issue,
       id_section,
       id_status,
@@ -74,11 +74,11 @@ const createIssue = async (req, res = response) => {
   }
 };
 
-const updateIssue = async (req, res = response) => {
-  const { id } = req.params;
-  const { issue, id_status, id_section, id_type } = req.body;
+var updateIssue = async (req, res = response) => {
+  var { id } = req.params;
+  var { issue, id_status, id_section, id_type } = req.body;
   try {
-    const issueDB = await Issue.findOne({
+    var issueDB = await Issue.findOne({
       where: {
         id,
       },
@@ -89,7 +89,7 @@ const updateIssue = async (req, res = response) => {
         msg: "No existe un issue con ese id",
       });
     }
-    const issueUpdated = await Issue.update(
+    var issueUpdated = await Issue.update(
       {
         issue,
         id_status,
@@ -115,25 +115,25 @@ const updateIssue = async (req, res = response) => {
   }
 };
 
-const getAllSections = async (req, res = response) => {
-  const sections = await IssueSection.findAll();
+var getAllSections = async (req, res = response) => {
+  var sections = await IssueSection.findAll();
   res.json({
     ok: true,
     sections,
   });
 };
 
-const getAllStatus = async (req, res = response) => {
-  const status = await IssueStatus.findAll();
+var getAllStatus = async (req, res = response) => {
+  var status = await IssueStatus.findAll();
   res.json({
     ok: true,
     status,
   });
 };
 
-const getIssuesBySection = async (req, res = response) => {
-  const { id } = req.params;
-  const issues = await Issue.findAll({
+var getIssuesBySection = async (req, res = response) => {
+  var { id } = req.params;
+  var issues = await Issue.findAll({
     where: {
       id_section: id,
     },
@@ -154,9 +154,9 @@ const getIssuesBySection = async (req, res = response) => {
   });
 };
 
-const getIssuesByStatus = async (req, res = response) => {
-  const { id } = req.params;
-  const issues = await Issue.findAll({
+var getIssuesByStatus = async (req, res = response) => {
+  var { id } = req.params;
+  var issues = await Issue.findAll({
     where: {
       id_status: id,
     },
@@ -177,9 +177,9 @@ const getIssuesByStatus = async (req, res = response) => {
   });
 };
 
-const getIssuesReport = async (req, res = response) => {
+var getIssuesReport = async (req, res = response) => {
   //count issues by status
-  const count_issues_status = await Issue.findAll({
+  var count_issues_status = await Issue.findAll({
     attributes: [
       "id_status",
       [sequelize.fn("COUNT", sequelize.col("id_status")), "count"],
@@ -193,7 +193,7 @@ const getIssuesReport = async (req, res = response) => {
     group: ["id_status"],
   });
 
-  const count_issues_section = await Issue.findAll({
+  var count_issues_section = await Issue.findAll({
     attributes: [
       "id_section",
       [sequelize.fn("COUNT", sequelize.col("id_section")), "count"],
@@ -207,7 +207,7 @@ const getIssuesReport = async (req, res = response) => {
     group: ["id_section"],
   });
 
-  const count_issues_type = await Issue.findAll({
+  var count_issues_type = await Issue.findAll({
     attributes: [
       "id_type",
       [sequelize.fn("COUNT", sequelize.col("id_type")), "count"],
@@ -229,9 +229,9 @@ const getIssuesReport = async (req, res = response) => {
   });
 };
 
-const getIssuesByType = async (req, res = response) => {
-  const { id } = req.params;
-  const issues = await Issue.findAll({
+var getIssuesByType = async (req, res = response) => {
+  var { id } = req.params;
+  var issues = await Issue.findAll({
     where: {
       id_type: id,
     },
@@ -253,8 +253,8 @@ const getIssuesByType = async (req, res = response) => {
   });
 };
 
-const getAllTypes = async (req, res = response) => {
-  const types = await IssueType.findAll();
+var getAllTypes = async (req, res = response) => {
+  var types = await IssueType.findAll();
   res.json({
     ok: true,
     types,

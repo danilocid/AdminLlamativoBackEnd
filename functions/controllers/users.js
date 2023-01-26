@@ -1,13 +1,13 @@
-const { response } = require("express");
-const sequelize = require("../database/db");
-const User = require("../database/models/User");
-const { jwtGenerator } = require("../util/jwt");
-const bcrypt = require("bcryptjs");
+var { response } = require("express");
+var sequelize = require("../database/db");
+var User = require("../database/models/User");
+var { jwtGenerator } = require("../util/jwt");
+var bcrypt = require("bcryptjs");
 
-const login = async (req, res = response) => {
-  const { user, password } = req.body;
+var login = async (req, res = response) => {
+  var { user, password } = req.body;
   try {
-    const salt = bcrypt.genSaltSync(10);
+    var salt = bcrypt.genSaltSync(10);
     passwordHash = bcrypt.hashSync(password, salt);
   } catch (error) {
     return res.status(500).json({
@@ -36,7 +36,7 @@ const login = async (req, res = response) => {
         });
       }
       if (compare) {
-        const token = await jwtGenerator(user.id);
+        var token = await jwtGenerator(user.id);
         return res.status(200).json({
           ok: true,
           msg: "Login correcto",
@@ -52,9 +52,9 @@ const login = async (req, res = response) => {
   });
 };
 
-const renewToken = async (req, res = response) => {
-  const userId = req.uid;
-  const newToken = await jwtGenerator(userId);
+var renewToken = async (req, res = response) => {
+  var userId = req.uid;
+  var newToken = await jwtGenerator(userId);
   res.json({
     ok: true,
     msg: "Token renovado",
@@ -62,8 +62,8 @@ const renewToken = async (req, res = response) => {
   });
 };
 
-const getAllUsers = async (req, res = response) => {
-  const users = await User.findAll();
+var getAllUsers = async (req, res = response) => {
+  var users = await User.findAll();
   res.json({
     ok: true,
     msg: "Lista de usuarios",

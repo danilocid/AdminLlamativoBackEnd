@@ -1,10 +1,10 @@
-const { Router } = require("express");
-const { check } = require("express-validator");
-const { validator } = require("../util/validator");
-const { JWTvalidator, JWTvalidatorHeader } = require("../util/jwt-validator");
+var { Router } = require("express");
+var { check } = require("express-validator");
+var { validator } = require("../util/validator");
+var { JWTvalidator, JWTvalidatorHeader } = require("../util/jwt-validator");
 
-const router = Router();
-const {
+var router = Router();
+var {
   getIssues,
   getIssue,
   createIssue,

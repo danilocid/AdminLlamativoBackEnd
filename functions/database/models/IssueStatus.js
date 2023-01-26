@@ -1,5 +1,5 @@
-const { Model, DataTypes } = require("sequelize");
-const sequelize = require("../db");
+var { Model, DataTypes } = require("sequelize");
+var sequelize = require("../db");
 
 class IssueStatus extends Model {}
 

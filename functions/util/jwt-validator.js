@@ -1,8 +1,8 @@
-const { response } = require("express");
-const jwt = require("jsonwebtoken");
+var { response } = require("express");
+var jwt = require("jsonwebtoken");
 
-const JWTvalidator = (req, res = response, next) => {
-  const token = req.body.token;
+var JWTvalidator = (req, res = response, next) => {
+  var token = req.body.token;
   if (!token) {
     return res.status(403).json({
       ok: false,
@@ -10,7 +10,7 @@ const JWTvalidator = (req, res = response, next) => {
     });
   }
   try {
-    const { uid } = jwt.verify(token, process.env.JWT_SECRET);
+    var { uid } = jwt.verify(token, process.env.JWT_SECRET);
     req.uid = uid;
     next();
   } catch (error) {
@@ -20,8 +20,8 @@ const JWTvalidator = (req, res = response, next) => {
     });
   }
 };
-const JWTvalidatorHeader = (req, res = response, next) => {
-  const token = req.header("token");
+var JWTvalidatorHeader = (req, res = response, next) => {
+  var token = req.header("token");
   if (!token) {
     return res.status(403).json({
       ok: false,
@@ -29,7 +29,7 @@ const JWTvalidatorHeader = (req, res = response, next) => {
     });
   }
   try {
-    const { uid } = jwt.verify(token, process.env.JWT_SECRET);
+    var { uid } = jwt.verify(token, process.env.JWT_SECRET);
     req.uid = uid;
     next();
   } catch (error) {
