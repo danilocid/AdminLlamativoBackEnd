@@ -1,38 +1,46 @@
 const functions = require("firebase-functions");
-const express = require("express");
-const app = express();
-const cors = require("cors");
-const sequelize = require("./database/db");
-const User = require("./database/models/User");
-const bcrypt = require("bcryptjs");
+const async = require("async");
+const cors = require("cors")({
+  origin: "*",
+  origin: "https://localhost:4200",
+  origin: "https://sivig-ae865.web.app",
+  origin: "https://sivig-ae865.firebaseapp.com",
+  origin: "*",
+  credentials: true,
+});
+var products = require("./controller/productsController");
 
-require("./database/asociations");
-app.use(
-  cors({
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-    "Access-Control-Allow-Headers":
-      "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With",
-  })
-);
-app.use(express.json());
-app.use("/users", require("./routes/users"));
-app.use("/issues", require("./routes/issues"));
-const PORT = process.env.PORT || 3000;
-app.listen(null, () => {
-  console.clear();
-  console.log(`Server is running on port ${PORT}`);
-  sequelize.sync().then(() => {
-    console.log("Database is connected");
+//login
+/* exports.login = functions.https.onRequest((request, response) => {
+  cors(request, response, () => {
+    login.login(request, response);
+  });
+}); */
+
+exports.users = require("./routes/users");
+//products
+// all products with token
+exports.productsGetAll = functions.https.onRequest((request, response) => {
+  cors(request, response, () => {
+    products.getAllProducts(request, response);
   });
 });
-const salt = bcrypt.genSaltSync(10);
-passwordHash = bcrypt.hashSync("94679847", salt);
+// product by id with token
+exports.productsGetById = functions.https.onRequest((request, response) => {
+  cors(request, response, () => {
+    products.getProduct(request, response);
+  });
+});
+//edit product with token
+exports.productsUpdate = functions.https.onRequest((request, response) => {
+  cors(request, response, () => {
+    products.updateProduct(request, response);
+  });
+});
 
-/* User.create({
-  user: "danilo",
-  password: passwordHash,
-  name: "Danilo",
-  email: "danilo.cid.v@gmail.com",
-}); */
-exports.app = functions.https.onRequest(app);
+//create product with token
+exports.productsCreate = functions.https.onRequest((request, response) => {
+  cors(request, response, () => {
+    products.createProduct(request, response);
+  });
+});

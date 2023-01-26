@@ -1,27 +1,16 @@
-var { Router } = require("express");
-var { check } = require("express-validator");
-var { validator } = require("../util/validator");
-var { JWTvalidator, JWTvalidatorHeader } = require("../util/jwt-validator");
+const functions = require("firebase-functions");
+var login = require("../controller/loginController");
+const cors = require("cors")({
+  origin: "*",
+  origin: "https://localhost:4200",
+  origin: "https://sivig-ae865.web.app",
+  origin: "https://sivig-ae865.firebaseapp.com",
+  origin: "*",
+  credentials: true,
+});
 
-var router = Router();
-var { login, renewToken, getAllUsers } = require("../controllers/users");
-
-router.post(
-  "/login",
-  [
-    check("user").not().isEmpty().withMessage("El usuario es requerido"),
-    check("password").not().isEmpty().withMessage("La contraseña es requerida"),
-  ],
-  validator,
-  login
-);
-router.post(
-  "/renew",
-  [check("token").not().isEmpty().withMessage("El token es requerido")],
-  JWTvalidator,
-  renewToken
-);
-
-router.get("/AllUsers", JWTvalidatorHeader, getAllUsers);
-
-module.exports = router;
+exports.login = functions.https.onRequest((request, response) => {
+  cors(request, response, () => {
+    login.login(request, response);
+  });
+});
