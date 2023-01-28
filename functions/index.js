@@ -18,6 +18,9 @@ var products = require("./controller/productsController");
 }); */
 
 exports.users = require("./routes/users");
+
+//issues
+exports.issues = require("./routes/issues");
 //products
 // all products with token
 exports.productsGetAll = functions.https.onRequest((request, response) => {
