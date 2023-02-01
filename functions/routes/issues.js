@@ -1,6 +1,5 @@
 const functions = require("firebase-functions");
 var issues = require("../controller/issuesController");
-var jwt = require("jsonwebtoken");
 const cors = require("cors")({
   origin: "*",
   origin: "https://localhost:4200",

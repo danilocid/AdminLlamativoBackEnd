@@ -177,7 +177,6 @@ exports.updateProduct = function (req, res) {
         return res.status(200).json({
           ok: true,
           msg: "Producto actualizado",
-          result,
         });
       });
     } catch (error) {

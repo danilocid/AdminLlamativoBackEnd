@@ -8,7 +8,6 @@ const cors = require("cors")({
   origin: "*",
   credentials: true,
 });
-var products = require("./controller/productsController");
 
 //login
 /* exports.login = functions.https.onRequest((request, response) => {
@@ -22,28 +21,4 @@ exports.users = require("./routes/users");
 //issues
 exports.issues = require("./routes/issues");
 //products
-// all products with token
-exports.productsGetAll = functions.https.onRequest((request, response) => {
-  cors(request, response, () => {
-    products.getAllProducts(request, response);
-  });
-});
-// product by id with token
-exports.productsGetById = functions.https.onRequest((request, response) => {
-  cors(request, response, () => {
-    products.getProduct(request, response);
-  });
-});
-//edit product with token
-exports.productsUpdate = functions.https.onRequest((request, response) => {
-  cors(request, response, () => {
-    products.updateProduct(request, response);
-  });
-});
-
-//create product with token
-exports.productsCreate = functions.https.onRequest((request, response) => {
-  cors(request, response, () => {
-    products.createProduct(request, response);
-  });
-});
+exports.products = require("./routes/products");
