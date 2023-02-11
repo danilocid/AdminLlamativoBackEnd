@@ -99,6 +99,72 @@ exports.getProduct = function (req, res) {
   }
 };
 
+exports.getProductWithMovements = function (req, res) {
+  // validate token
+  var token = req.headers.token;
+  var id = req.body.id;
+  if (token === undefined) {
+    return res.status(403).json({
+      ok: false,
+      msg: "No hay token",
+    });
+  } else if (id === undefined || id === null || id === "") {
+    return res.status(401).json({
+      ok: false,
+      msg: "El id es requerido",
+    });
+  } else {
+    try {
+      var { uid } = jwt.verify(token, process.env.JWT_SECRET);
+      req.uid = uid;
+      console.log("uid: " + uid);
+      var connection = DbConnection.initFunction();
+
+      var query = `SELECT * FROM articulos WHERE id = ${id}`;
+      connection.query(query, (err, result) => {
+        if (err) {
+          return res.status(500).json({
+            ok: false,
+            msg: "Error al consultar la base de datos",
+            err,
+          });
+        }
+        if (result.length === 0) {
+          return res.status(401).json({
+            ok: false,
+            msg: "No hay productos",
+          });
+        }
+        var query = `SELECT detalle_movimientos_articulos.*, tipo_movimientos.tipo_movimiento, users.name FROM detalle_movimientos_articulos `;
+        query += `LEFT JOIN tipo_movimientos ON (tipo_movimientos.id = detalle_movimientos_articulos.movimiento_id) `;
+        query += `LEFT JOIN users ON (users.id = detalle_movimientos_articulos.usuario_id) `;
+        query += `WHERE detalle_movimientos_articulos.producto_id = ${id}`;
+        connection.query(query, (err, movements) => {
+          if (err) {
+            return res.status(500).json({
+              ok: false,
+              msg: "Error al consultar la base de datos",
+              err,
+            });
+          }
+          return res.status(200).json({
+            ok: true,
+            msg: "Producto encontrado",
+            result,
+            movements,
+          });
+        });
+      });
+    } catch (error) {
+      console.log(error);
+      return res.status(403).json({
+        ok: false,
+        msg: "Token no valido",
+      });
+    }
+  }
+};
+
 exports.updateProduct = function (req, res) {
   // validate token
   var token = req.headers.token;

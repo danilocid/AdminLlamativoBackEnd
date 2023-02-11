@@ -38,3 +38,10 @@ exports.Create = functions.https.onRequest((request, response) => {
     products.createProduct(request, response);
   });
 });
+
+//get product by id whit movements with token
+exports.GetMovements = functions.https.onRequest((request, response) => {
+  cors(request, response, () => {
+    products.getProductWithMovements(request, response);
+  });
+});
