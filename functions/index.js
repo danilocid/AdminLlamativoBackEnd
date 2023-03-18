@@ -10,11 +10,6 @@ const cors = require("cors")({
 });
 
 //login
-/* exports.login = functions.https.onRequest((request, response) => {
-  cors(request, response, () => {
-    login.login(request, response);
-  });
-}); */
 
 exports.users = require("./routes/users");
 
@@ -22,3 +17,5 @@ exports.users = require("./routes/users");
 exports.issues = require("./routes/issues");
 //products
 exports.products = require("./routes/products");
+//utils
+exports.utils = require("./routes/utils");
