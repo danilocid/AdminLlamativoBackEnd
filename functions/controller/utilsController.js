@@ -18,11 +18,13 @@ exports.getAllRegions = (req, res) => {
       var connection = DbConnection.initFunction();
       var sql = "SELECT * FROM regiones";
       connection.query(sql, (err, result) => {
+        connection.end();
         if (err) {
           console.log(err);
           return res.status(500).json({
             ok: false,
             msg: "Error al obtener las regiones",
+            err,
           });
         } else {
           return res.status(200).json({
@@ -65,11 +67,13 @@ exports.getAllComunasByRegionId = (req, res) => {
       var connection = DbConnection.initFunction();
       var sql = "SELECT * FROM comunas WHERE region_id = ?";
       connection.query(sql, [req.body.regionid], (err, result) => {
+        connection.end();
         if (err) {
           console.log(err);
           return res.status(500).json({
             ok: false,
             msg: "Error al obtener las comunas",
+            err,
           });
         } else {
           return res.status(200).json({

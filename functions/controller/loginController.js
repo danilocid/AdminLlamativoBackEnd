@@ -11,6 +11,7 @@ exports.login = function (req, res) {
   var connection = DbConnection.initFunction();
   var query = `SELECT * FROM users WHERE user = '${user}' `;
   connection.query(query, async (err, result) => {
+    connection.end();
     if (err) {
       return res.status(500).json({
         ok: false,

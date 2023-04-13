@@ -18,6 +18,7 @@ exports.getAllProducts = function (req, res) {
       var connection = DbConnection.initFunction();
       var query = `SELECT * FROM articulos`;
       connection.query(query, (err, result) => {
+        connection.end();
         if (err) {
           return res.status(500).json({
             ok: false,
@@ -70,6 +71,7 @@ exports.getProduct = function (req, res) {
 
       var query = `SELECT * FROM articulos WHERE id = ${id}`;
       connection.query(query, (err, result) => {
+        connection.end();
         if (err) {
           return res.status(500).json({
             ok: false,
@@ -123,6 +125,7 @@ exports.getProductWithMovements = function (req, res) {
       var query = `SELECT * FROM articulos WHERE id = ${id}`;
       connection.query(query, (err, result) => {
         if (err) {
+          connection.end();
           return res.status(500).json({
             ok: false,
             msg: "Error al consultar la base de datos",
@@ -130,6 +133,7 @@ exports.getProductWithMovements = function (req, res) {
           });
         }
         if (result.length === 0) {
+          connection.end();
           return res.status(401).json({
             ok: false,
             msg: "No hay productos",
@@ -141,12 +145,14 @@ exports.getProductWithMovements = function (req, res) {
         query += `WHERE detalle_movimientos_articulos.producto_id = ${id}`;
         connection.query(query, (err, movements) => {
           if (err) {
+            connection.end();
             return res.status(500).json({
               ok: false,
               msg: "Error al consultar la base de datos",
               err,
             });
           }
+          connection.end();
           return res.status(200).json({
             ok: true,
             msg: "Producto encontrado",
@@ -227,6 +233,7 @@ exports.updateProduct = function (req, res) {
       var connection = DbConnection.initFunction();
       var query = `UPDATE articulos SET cod_interno = '${cod_interno}', cod_barras = '${cod_barras}', descripcion = '${descripcion}', costo_neto = '${costo_neto}', costo_imp = '${costo_imp}', venta_neto = '${venta_neto}', venta_imp = '${venta_imp}', stock_critico = '${stock_critico}', activo = '${activo}' WHERE id = ${id}`;
       connection.query(query, (err, result) => {
+        connection.end();
         if (err) {
           return res.status(500).json({
             ok: false,
@@ -313,6 +320,7 @@ exports.createProduct = function (req, res) {
       var connection = DbConnection.initFunction();
       var query = `INSERT INTO articulos (cod_interno, cod_barras, descripcion, costo_neto, costo_imp, venta_neto, venta_imp, stock_critico, stock, activo, created_at, updated_at) VALUES ('${cod_interno}', '${cod_barras}', '${descripcion}', '${costo_neto}', '${costo_imp}', '${venta_neto}', '${venta_imp}', '${stock_critico}', 0, '${activo}', NOW(), NOW())`;
       connection.query(query, (err, result) => {
+        connection.end();
         if (err) {
           if (err.code === "ER_DUP_ENTRY") {
             return res.status(401).json({
@@ -365,6 +373,7 @@ exports.getLastCountedProducts = function (req, res) {
       var connection = DbConnection.initFunction();
       var query = `SELECT * FROM articulos ORDER BY last_cont ASC LIMIT 5`;
       connection.query(query, (err, result) => {
+        connection.end();
         if (err) {
           return res.status(500).json({
             ok: false,
@@ -409,6 +418,7 @@ exports.getAllMovementsTypes = function (req, res) {
       var connection = DbConnection.initFunction();
       var query = `SELECT * FROM tipo_movimientos`;
       connection.query(query, (err, result) => {
+        connection.end();
         if (err) {
           return res.status(500).json({
             ok: false,
@@ -480,6 +490,7 @@ exports.saveMovement = function (req, res) {
         var query = `INSERT INTO ajustes_de_inventarios (tipo_movimiento_id, observaciones,  costo_neto, costo_imp, entradas, salidas, created_at, updated_at, user_id) VALUES ('${tipo_movimiento}', '${obs}',  '${costo_neto}', '${costo_imp}', '${entradas}', '${salidas}', NOW(), NOW(), '${uid}')`;
         connection.query(query, (err, result) => {
           if (err) {
+            connection.end();
             return res.status(500).json({
               ok: false,
               msg: "Error al consultar la base de datos",
@@ -553,12 +564,14 @@ exports.saveMovement = function (req, res) {
             });
           });
           if (error) {
+            connection.end();
             return res.status(500).json({
               ok: false,
               msg: "Error al consultar la base de datos",
               errorMessages,
             });
           } else {
+            connection.end();
             return res.status(200).json({
               ok: true,
               msg: "Ajuste de inventario guardado",
@@ -597,6 +610,7 @@ exports.getAllMovements = function (req, res) {
       query += "ON user_id = u.id ";
       query += "ORDER BY aj.id DESC ";
       connection.query(query, (err, result) => {
+        connection.end();
         if (err) {
           console.log(err);
           return res.status(500).json({
@@ -654,6 +668,7 @@ exports.getMovementDetails = function (req, res) {
         query += "WHERE aj.id = ? ";
         connection.query(query, [id], (err, result) => {
           if (err) {
+            connection.end();
             console.log(err);
             return res.status(500).json({
               ok: false,
@@ -669,6 +684,7 @@ exports.getMovementDetails = function (req, res) {
               " WHERE detalle_ajustes_de_inventarios.ajuste_de_inventario_id = ?";
             connection.query(query2, [id], (err, result2) => {
               if (err) {
+                connection.end();
                 console.log(err);
                 return res.status(500).json({
                   ok: false,
@@ -676,6 +692,7 @@ exports.getMovementDetails = function (req, res) {
                   err,
                 });
               } else {
+                connection.end();
                 return res.status(200).json({
                   ok: true,
                   msg: "Ajustes de inventario",

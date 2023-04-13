@@ -19,3 +19,5 @@ exports.issues = require("./routes/issues");
 exports.products = require("./routes/products");
 //utils
 exports.utils = require("./routes/utils");
+//clients
+exports.clients = require("./routes/clients");

@@ -17,6 +17,7 @@ exports.getAllIssues = function (req, res) {
       var connection = DbConnection.initFunction();
       var query = `SELECT issues.*, issue_types.issue_type as Tipo, issue_statuses.name AS Status, issue_sections.name AS Seccion FROM issues INNER JOIN issue_types ON issues.id_type = issue_types.id INNER JOIN issue_statuses ON issues.id_status = issue_statuses.id INNER JOIN issue_sections ON issues.id_section = issue_sections.id; `;
       connection.query(query, (err, result) => {
+        connection.end();
         if (err) {
           return res.status(500).json({
             ok: false,
@@ -62,6 +63,7 @@ exports.getIssueById = function (req, res) {
       var connection = DbConnection.initFunction();
       query = `SELECT * FROM issues WHERE issues.id = ${req.body.id};`;
       connection.query(query, (err, result) => {
+        connection.end();
         if (err) {
           return res.status(500).json({
             ok: false,
@@ -106,6 +108,7 @@ exports.getAllStatus = function (req, res) {
       var connection = DbConnection.initFunction();
       var query = `SELECT * FROM issue_statuses;`;
       connection.query(query, (err, result) => {
+        connection.end();
         if (err) {
           return res.status(500).json({
             ok: false,
@@ -150,6 +153,7 @@ exports.getAllSections = function (req, res) {
       var connection = DbConnection.initFunction();
       var query = `SELECT * FROM issue_sections;`;
       connection.query(query, (err, result) => {
+        connection.end();
         if (err) {
           return res.status(500).json({
             ok: false,
@@ -194,6 +198,7 @@ exports.getAllTypes = function (req, res) {
       var connection = DbConnection.initFunction();
       var query = `SELECT * FROM issue_types;`;
       connection.query(query, (err, result) => {
+        connection.end();
         if (err) {
           return res.status(500).json({
             ok: false,
@@ -243,6 +248,7 @@ exports.updateIssue = function (req, res) {
       var connection = DbConnection.initFunction();
       var query = `UPDATE issues SET issue = '${issue}', id_section = ${id_section}, id_status = ${id_status}, id_type = ${id_type}, updatedAt = NOW() WHERE id = ${id};`;
       connection.query(query, (err, result) => {
+        connection.end();
         if (err) {
           return res.status(500).json({
             ok: false,
@@ -285,6 +291,7 @@ exports.createIssue = function (req, res) {
       var connection = DbConnection.initFunction();
       var query = `INSERT INTO issues (issue, id_section, id_status, id_type, createdAt, updatedAt) VALUES ('${issue}', ${id_section}, ${id_status}, ${id_type}, NOW(), NOW());`;
       connection.query(query, (err, result) => {
+        connection.end();
         if (err) {
           return res.status(500).json({
             ok: false,
@@ -329,6 +336,7 @@ exports.getReport = function (req, res) {
       query = query + " GROUP BY issue_types.id;";
       connection.query(query, (err, resultTypes) => {
         if (err) {
+          connection.end();
           return res.status(500).json({
             ok: false,
             msg: "Error al consultar la base de datos",
@@ -344,6 +352,7 @@ exports.getReport = function (req, res) {
           query = query + " GROUP BY issue_statuses.id;";
           connection.query(query, (err, resultStatuses) => {
             if (err) {
+              connection.end();
               return res.status(500).json({
                 ok: false,
                 msg: "Error al consultar la base de datos",
@@ -359,6 +368,7 @@ exports.getReport = function (req, res) {
               query = query + " GROUP BY issue_sections.id;";
               connection.query(query, (err, resultSections) => {
                 if (err) {
+                  connection.end();
                   return res.status(500).json({
                     ok: false,
                     msg: "Error al consultar la base de datos",
@@ -366,6 +376,7 @@ exports.getReport = function (req, res) {
                     query,
                   });
                 } else {
+                  connection.end();
                   return res.status(200).json({
                     ok: true,
                     msg: "Reporte",
