@@ -21,3 +21,5 @@ exports.products = require("./routes/products");
 exports.utils = require("./routes/utils");
 //clients
 exports.clients = require("./routes/clients");
+//sales
+exports.sales = require("./routes/sales");

@@ -24,3 +24,17 @@ exports.getAllComunasByRegionId = functions.https.onRequest(
     });
   }
 );
+
+//get all tipo de documento
+exports.getAllTipoDocumento = functions.https.onRequest((request, response) => {
+  cors(request, response, () => {
+    utils.getAllTipoDocumento(request, response);
+  });
+});
+
+//get all medio de pago
+exports.getAllMedioPago = functions.https.onRequest((request, response) => {
+  cors(request, response, () => {
+    utils.getAllMedioPago(request, response);
+  });
+});

@@ -2,7 +2,7 @@ var DbConnection = require("../util/dbConnection");
 var jwt = require("jsonwebtoken");
 require("dotenv").config();
 
-exports.getAllProducts = function (req, res) {
+exports.getAllProducts = function (req, res, conStock = false) {
   // validate token
   var token = req.headers.token;
   if (token === undefined) {
@@ -16,7 +16,11 @@ exports.getAllProducts = function (req, res) {
       req.uid = uid;
       console.log("uid: " + uid);
       var connection = DbConnection.initFunction();
-      var query = `SELECT * FROM articulos`;
+      if (!conStock) {
+        var query = `SELECT * FROM articulos`;
+      } else {
+        var query = `SELECT * FROM articulos WHERE stock > 0`;
+      }
       connection.query(query, (err, result) => {
         connection.end();
         if (err) {
@@ -32,6 +36,7 @@ exports.getAllProducts = function (req, res) {
             msg: "No hay productos",
           });
         }
+        console.log("result: " + result);
         return res.status(200).json({
           ok: true,
           msg: "Productos encontrados",
@@ -68,7 +73,6 @@ exports.getProduct = function (req, res) {
       req.uid = uid;
       console.log("uid: " + uid);
       var connection = DbConnection.initFunction();
-
       var query = `SELECT * FROM articulos WHERE id = ${id}`;
       connection.query(query, (err, result) => {
         connection.end();
@@ -490,7 +494,6 @@ exports.saveMovement = function (req, res) {
         var query = `INSERT INTO ajustes_de_inventarios (tipo_movimiento_id, observaciones,  costo_neto, costo_imp, entradas, salidas, created_at, updated_at, user_id) VALUES ('${tipo_movimiento}', '${obs}',  '${costo_neto}', '${costo_imp}', '${entradas}', '${salidas}', NOW(), NOW(), '${uid}')`;
         connection.query(query, (err, result) => {
           if (err) {
-            connection.end();
             return res.status(500).json({
               ok: false,
               msg: "Error al consultar la base de datos",
@@ -528,6 +531,7 @@ exports.saveMovement = function (req, res) {
                 console.log("err: " + err);
               } else {
                 console.log("result: " + result);
+
                 values = [];
                 //update stock and update_at
                 var query3 = `UPDATE articulos SET stock = stock + ${articulo.entradas} - ${articulo.salidas}, updated_at = NOW() WHERE id = ${articulo.id}`;
@@ -564,14 +568,12 @@ exports.saveMovement = function (req, res) {
             });
           });
           if (error) {
-            connection.end();
             return res.status(500).json({
               ok: false,
               msg: "Error al consultar la base de datos",
               errorMessages,
             });
           } else {
-            connection.end();
             return res.status(200).json({
               ok: true,
               msg: "Ajuste de inventario guardado",

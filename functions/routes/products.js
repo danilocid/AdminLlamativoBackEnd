@@ -17,6 +17,11 @@ exports.GetAll = functions.https.onRequest((request, response) => {
     products.getAllProducts(request, response);
   });
 });
+exports.GetAllWhitStock = functions.https.onRequest((request, response) => {
+  cors(request, response, () => {
+    products.getAllProducts(request, response, true);
+  });
+});
 
 // product by id with token
 exports.Get = functions.https.onRequest((request, response) => {
