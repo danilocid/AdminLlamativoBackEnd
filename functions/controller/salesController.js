@@ -49,7 +49,7 @@ exports.addSale = (req, res) => {
         var query = "";
         var hasError = false;
         productos.forEach((producto) => {
-          query = `INSERT INTO detalle_ventas (id_venta, articulo, cantidad, precio_neto, precio_imp, costo_neto, costo_imp) VALUES (${venta_id}, ${producto.id}, ${producto.quantity}, ${producto.venta_neto}, ${producto.venta_neto}, ${producto.costo_neto}, ${producto.costo_imp})`;
+          query = `INSERT INTO detalle_ventas (id_venta, articulo, cantidad, precio_neto, precio_imp, costo_neto, costo_imp) VALUES (${venta_id}, ${producto.id}, ${producto.quantity}, ${producto.venta_neto}, ${producto.venta_imp}, ${producto.costo_neto}, ${producto.costo_imp})`;
           console.log(query);
           connection.query(query, function (err, result, fields) {
             if (err) {
@@ -92,6 +92,134 @@ exports.addSale = (req, res) => {
             err: err,
           });
         }
+      });
+    } catch (error) {
+      return res.status(403).json({
+        ok: false,
+        msg: "Token no válido",
+      });
+    }
+  }
+};
+
+exports.getSales = (req, res) => {
+  // validate token
+  var token = req.headers.token;
+  if (token === undefined) {
+    return res.status(403).json({
+      ok: false,
+      msg: "No hay token",
+    });
+  } else {
+    try {
+      var { uid } = jwt.verify(token, process.env.JWT_SECRET);
+      req.uid = uid;
+      console.log("uid: " + uid);
+      // get db connection
+      var connection = DbConnection.initFunction();
+      // execute query
+      var query =
+        "SELECT v.id, v.monto_neto, v.monto_imp, v.fecha, c.nombre, td.tipo, md.medio_de_pago, v.documento FROM ventas v ";
+      query += "INNER JOIN tipo_documento td ";
+      query += "INNER JOIN medios_de_pago md ";
+      query +=
+        "INNER JOIN clientes c WHERE tipo_documento = td.id AND medio_pago = md.id AND cliente = c.rut";
+      console.log(query);
+      connection.query(query, function (err, result) {
+        if (err) {
+          console.log(err);
+          return res.status(500).json({
+            ok: false,
+            msg: "Error al obtener ventas",
+            err: err,
+          });
+        }
+        console.log("result: " + result);
+        // close db connection
+        connection.end();
+        return res.status(200).json({
+          ok: true,
+          msg: "Ventas obtenidas correctamente",
+          sales: result,
+        });
+      });
+    } catch (error) {
+      return res.status(403).json({
+        ok: false,
+        msg: "Token no válido",
+      });
+    }
+  }
+};
+
+exports.getSaleById = (req, res) => {
+  // validate token
+  var token = req.headers.token;
+  var id = req.body.id;
+  if (token === undefined) {
+    return res.status(403).json({
+      ok: false,
+      msg: "No hay token",
+    });
+  } else if (id === undefined || id === null || id === "") {
+    return res.status(401).json({
+      ok: false,
+      msg: "El id es requerido",
+    });
+  } else {
+    try {
+      var { uid } = jwt.verify(token, process.env.JWT_SECRET);
+      req.uid = uid;
+      console.log("uid: " + uid);
+      var detail = [];
+      // get db connection
+      var connection = DbConnection.initFunction();
+      // execute query
+      var query =
+        "SELECT v.id, v.monto_neto, v.monto_imp, v.costo_neto, v.costo_imp, v.fecha, c.nombre, td.tipo, md.medio_de_pago, v.documento FROM ventas v ";
+      query += "INNER JOIN tipo_documento td ";
+      query += "INNER JOIN medios_de_pago md ";
+      query +=
+        "INNER JOIN clientes c WHERE tipo_documento = td.id AND medio_pago = md.id AND cliente = c.rut and v.id = " +
+        id;
+      console.log(query);
+      connection.query(query, function (err, result) {
+        if (err) {
+          console.log(err);
+          return res.status(500).json({
+            ok: false,
+            msg: "Error al obtener venta",
+            err: err,
+          });
+        }
+        console.log("result: " + result);
+        // close db connection
+        //obtener detalle de venta
+        var query2 =
+          "SELECT dv.articulo, dv.cantidad, dv.precio_neto, dv.precio_imp, dv.costo_neto, dv.costo_imp, a.descripcion FROM detalle_ventas dv ";
+        query2 += "INNER JOIN articulos a ";
+        query2 += "WHERE dv.articulo = a.id AND dv.id_venta = " + id;
+        console.log(query2);
+        connection.query(query2, function (err, result2) {
+          if (err) {
+            console.log(err);
+            return res.status(500).json({
+              ok: false,
+              msg: "Error al obtener detalle de venta",
+              err: err,
+            });
+          }
+          console.log("result2: " + result2);
+          detail = result2;
+          // close db connection
+          connection.end();
+          return res.status(200).json({
+            ok: true,
+            msg: "Venta obtenida correctamente",
+            sale: result,
+            detail: detail,
+          });
+        });
       });
     } catch (error) {
       return res.status(403).json({

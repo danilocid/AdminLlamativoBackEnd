@@ -9,9 +9,20 @@ const cors = require("cors")({
   credentials: true,
 });
 
-//get all medio de pago
 exports.addSale = functions.https.onRequest((request, response) => {
   cors(request, response, () => {
     utils.addSale(request, response);
+  });
+});
+
+exports.getSales = functions.https.onRequest((request, response) => {
+  cors(request, response, () => {
+    utils.getSales(request, response);
+  });
+});
+
+exports.getSaleById = functions.https.onRequest((request, response) => {
+  cors(request, response, () => {
+    utils.getSaleById(request, response);
   });
 });
