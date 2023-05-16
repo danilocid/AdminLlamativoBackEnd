@@ -2,7 +2,7 @@ var DbConnection = require("../util/dbConnection");
 var jwt = require("jsonwebtoken");
 require("dotenv").config();
 
-exports.getAllProducts = function (req, res, conStock = false) {
+exports.getAllProducts = function (req, res, conStock = false, activo = true) {
   // validate token
   var token = req.headers.token;
   if (token === undefined) {
@@ -14,12 +14,35 @@ exports.getAllProducts = function (req, res, conStock = false) {
     try {
       var { uid } = jwt.verify(token, process.env.JWT_SECRET);
       req.uid = uid;
+      console.log(req.query);
+      activo = req.query.active;
+      console.log("activo: " + activo);
+      if (activo === undefined || activo === null || activo === "") {
+        activo = true;
+      }
+      console.log("activo: " + activo);
+      conStock = req.query.stock;
+      console.log("conStock: " + conStock);
+      if (conStock === undefined || conStock === null || conStock === "") {
+        conStock = false;
+      }
+      console.log("conStock: " + conStock);
       console.log("uid: " + uid);
       var connection = DbConnection.initFunction();
-      if (!conStock) {
+      if (!conStock || conStock === "false") {
+        console.log("no con stock");
         var query = `SELECT * FROM articulos`;
+        if (activo === "true") {
+          console.log("activo");
+          query += ` WHERE activo = 1`;
+        }
       } else {
+        console.log("con stock");
         var query = `SELECT * FROM articulos WHERE stock > 0`;
+        if (activo === "true") {
+          console.log("activo");
+          query += ` AND activo = 1`;
+        }
       }
       connection.query(query, (err, result) => {
         connection.end();
@@ -36,7 +59,7 @@ exports.getAllProducts = function (req, res, conStock = false) {
             msg: "No hay productos",
           });
         }
-        console.log("result: " + result);
+        //console.log("result: " + result);
         return res.status(200).json({
           ok: true,
           msg: "Productos encontrados",
