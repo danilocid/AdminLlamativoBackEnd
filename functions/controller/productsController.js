@@ -54,7 +54,7 @@ exports.getAllProducts = function (req, res, conStock = false, activo = true) {
           });
         }
         if (result.length === 0) {
-          return res.status(401).json({
+          return res.status(200).json({
             ok: false,
             msg: "No hay productos",
           });
