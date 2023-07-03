@@ -738,3 +738,37 @@ exports.getMovementDetails = function (req, res) {
     }
   }
 };
+
+exports.getResumeInventario = async function (req, res) {
+  var query = `SELECT * FROM articulos`;
+  var connection = DbConnection.initFunction();
+  var productos = [];
+  var items = 0;
+  var costo = 0;
+  var precio = 0;
+  await connection.query(query, (err, result) => {
+    connection.end();
+    if (err) {
+      console.log(err);
+      return res.status(500).json({
+        ok: false,
+        msg: "Error al consultar la base de datos",
+        err,
+      });
+    } else {
+      productos = result;
+      productos.forEach((producto) => {
+        items += producto.stock;
+        costo += producto.stock * (producto.costo_neto + producto.costo_imp);
+        precio += producto.stock * (producto.venta_neto + producto.venta_imp);
+      });
+      return res.status(200).json({
+        ok: true,
+        msg: "Inventario",
+        items,
+        costo,
+        precio,
+      });
+    }
+  });
+};

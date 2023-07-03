@@ -85,3 +85,10 @@ exports.GetMovementDetail = functions.https.onRequest((request, response) => {
     products.getMovementDetails(request, response);
   });
 });
+
+//get resume of products
+exports.GetResume = functions.https.onRequest((request, response) => {
+  cors(request, response, () => {
+    products.getResumeInventario(request, response);
+  });
+});
