@@ -39,6 +39,7 @@ exports.login = function (req, res) {
           ok: true,
           msg: "Login correcto",
           token,
+          test,
         });
       } else {
         return res.status(401).json({
