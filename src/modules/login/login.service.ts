@@ -10,7 +10,8 @@ import { Login } from './entities/login.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 var bcrypt = require('bcryptjs');
-
+var jwt = require('jsonwebtoken');
+require('dotenv').config();
 @Injectable()
 export class LoginService {
   constructor(
@@ -25,7 +26,21 @@ export class LoginService {
       if (user) {
         let password = await bcrypt.compare(LoginDto.password, user.password);
         if (password) {
-          return user;
+          //generate jwt
+          const payload = {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+          };
+
+          const token = jwt.sign(payload, process.env.JWT_SECRET, {
+            expiresIn: '1d',
+          });
+          return {
+            ok: true,
+            message: 'Login successfully',
+            token: token,
+          };
         } else {
           return {
             ok: false,
