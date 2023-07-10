@@ -2,7 +2,8 @@ import { Module } from '@nestjs/common';
 import { LoginModule } from './modules/login/login.module';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { PaymentMethodsModule } from './modules/payment-methods/payment-methods.module';
+import { CommonModule } from './modules/common/common.module';
+
 require('dotenv');
 
 @Module({
@@ -21,7 +22,7 @@ require('dotenv');
       synchronize: true,
     }),
     LoginModule,
-    PaymentMethodsModule,
+    CommonModule,
   ],
   controllers: [],
   providers: [],

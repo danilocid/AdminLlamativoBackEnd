@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { PaymentMethodsService } from './payment-methods.service';
-import { PaymentMethodsController } from './payment-methods.controller';
+import { CommonService } from './common.service';
+import { CommonController } from './common.controller';
 import { PaymentMethod } from './entities/payment-method.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PassportModule } from '@nestjs/passport';
@@ -20,7 +20,7 @@ import { JwtModule } from '@nestjs/jwt';
       inject: [],
     }),
   ],
-  controllers: [PaymentMethodsController],
-  providers: [PaymentMethodsService],
+  controllers: [CommonController],
+  providers: [CommonService],
 })
-export class PaymentMethodsModule {}
+export class CommonModule {}

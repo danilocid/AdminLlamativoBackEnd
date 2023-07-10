@@ -6,13 +6,13 @@ import { Repository } from 'typeorm';
 import { PaymentMethod } from './entities/payment-method.entity';
 
 @Injectable()
-export class PaymentMethodsService {
+export class CommonService {
   constructor(
     @InjectRepository(PaymentMethod)
     private readonly payment: Repository<PaymentMethod>,
   ) {}
 
-  findAll() {
+  findAllPaymentMethod() {
     let payment = this.payment.find();
     return payment;
   }

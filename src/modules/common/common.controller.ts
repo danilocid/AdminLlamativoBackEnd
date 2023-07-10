@@ -8,24 +8,23 @@ import {
   Delete,
   UseGuards,
 } from '@nestjs/common';
-import { PaymentMethodsService } from './payment-methods.service';
+import { CommonService } from './common.service';
 import { CreatePaymentMethodDto } from './dto/create-payment-method.dto';
 import { UpdatePaymentMethodDto } from './dto/update-payment-method.dto';
 import {
   ApiBearerAuth,
   ApiHeader,
   ApiOperation,
-  ApiProperty,
   ApiTags,
 } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 
-@Controller('payment-methods')
-@ApiTags('payment-methods')
+@Controller('common')
+@ApiTags('common')
 
 //add description to swagger
-export class PaymentMethodsController {
-  constructor(private readonly paymentMethodsService: PaymentMethodsService) {}
+export class CommonController {
+  constructor(private readonly commonService: CommonService) {}
 
   @ApiHeader({
     name: 'Authorization',
@@ -38,8 +37,8 @@ export class PaymentMethodsController {
   })
   @UseGuards(AuthGuard('jwt'))
   @ApiBearerAuth('jwt')
-  @Get()
+  @Get('payment-methods')
   findAll() {
-    return this.paymentMethodsService.findAll();
+    return this.commonService.findAllPaymentMethod();
   }
 }
