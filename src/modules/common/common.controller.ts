@@ -38,7 +38,23 @@ export class CommonController {
   @UseGuards(AuthGuard('jwt'))
   @ApiBearerAuth('jwt')
   @Get('payment-methods')
-  findAll() {
+  findAllPaymentMethod() {
     return this.commonService.findAllPaymentMethod();
+  }
+
+  @ApiHeader({
+    name: 'Authorization',
+    description: 'the token we need for auth.',
+    required: false,
+  })
+  @ApiOperation({
+    summary: 'Get all document types',
+    description: 'Get all document types',
+  })
+  @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth('jwt')
+  @Get('document-types')
+  findAlldocumentType() {
+    return this.commonService.findAlldocumentType();
   }
 }
