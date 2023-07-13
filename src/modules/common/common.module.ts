@@ -6,10 +6,12 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { DocumentType } from './entities/document-type.entity';
 import { PaymentMethod } from './entities/payment-method.entity';
+import { Region } from './entities/regions.entity';
+import { Comuns } from './entities/comuns.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([PaymentMethod, DocumentType]),
+    TypeOrmModule.forFeature([PaymentMethod, DocumentType, Region, Comuns]),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.registerAsync({
       useFactory: () => {

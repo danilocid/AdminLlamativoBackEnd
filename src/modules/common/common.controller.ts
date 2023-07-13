@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   UseGuards,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { CommonService } from './common.service';
 import { CreatePaymentMethodDto } from './dto/create-payment-method.dto';
@@ -56,5 +57,54 @@ export class CommonController {
   @Get('document-types')
   findAlldocumentType() {
     return this.commonService.findAlldocumentType();
+  }
+
+  @ApiHeader({
+    name: 'Authorization',
+    description: 'the token we need for auth.',
+    required: false,
+  })
+  @ApiOperation({
+    summary: 'Get all regions',
+    description: 'Get all regions',
+  })
+  @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth('jwt')
+  @Get('regions')
+  findAllRegion() {
+    return this.commonService.findAllRegion();
+  }
+
+  @ApiHeader({
+    name: 'Authorization',
+    description: 'the token we need for auth.',
+    required: false,
+  })
+  @ApiOperation({
+    summary: 'Get all comuns',
+    description: 'Get all comuns',
+  })
+  @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth('jwt')
+  @Get('comuns')
+  findAllComuns() {
+    return this.commonService.findAllComuns();
+  }
+
+  //find all comuns by region id
+  @ApiHeader({
+    name: 'Authorization',
+    description: 'the token we need for auth.',
+    required: false,
+  })
+  @ApiOperation({
+    summary: 'Get all comuns by region id',
+    description: 'Get all comuns by region id',
+  })
+  @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth('jwt')
+  @Get('comuns/:id')
+  findAllComunsByRegionId(@Param('id', ParseIntPipe) id: number) {
+    return this.commonService.findAllComunsByRegionId(id);
   }
 }
