@@ -3,6 +3,7 @@ import { LoginModule } from './modules/login/login.module';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CommonModule } from './modules/common/common.module';
+import { IssuesModule } from './modules/issues/issues.module';
 
 require('dotenv');
 
@@ -22,6 +23,7 @@ require('dotenv');
       synchronize: true,
     }),
     LoginModule,
+    IssuesModule,
     CommonModule,
   ],
   controllers: [],
