@@ -189,4 +189,49 @@ export class IssuesService {
     }
     return `This action removes a #${id} issue`;
   }
+
+  async resume() {
+    let types;
+    let status;
+    let sections;
+    try {
+      //types = count of issues by type, with the name of the type, we need to use query builder because typeorm doesn't support count by relations
+      types = await this.issueRepository
+        .createQueryBuilder('issue')
+        .select('COUNT(issue.id)', 'count')
+        .addSelect('issue_type.type', 'type')
+        .innerJoin('issue.issueType', 'issue_type')
+        .groupBy('issue_type.id')
+        .getRawMany();
+
+      //status = count of issues by status, with the name of the status, we need to use query builder because typeorm doesn't support count by relations
+      status = await this.issueRepository
+        .createQueryBuilder('issue')
+        .select('COUNT(issue.id)', 'count')
+        .addSelect('issue_status.status', 'status')
+        .innerJoin('issue.issueStatus', 'issue_status')
+        .groupBy('issue_status.id')
+        .getRawMany();
+
+      //sections = count of issues by section, with the name of the section, we need to use query builder because typeorm doesn't support count by relations
+      sections = await this.issueRepository
+        .createQueryBuilder('issue')
+        .select('COUNT(issue.id)', 'count')
+        .addSelect('issue_section.section', 'section')
+        .innerJoin('issue.issueSection', 'issue_section')
+        .groupBy('issue_section.id')
+        .getRawMany();
+    } catch (error) {
+      console.log(error);
+      throw new InternalServerErrorException({
+        message: 'Error getting resume',
+        error: error,
+      });
+    }
+    return {
+      types: types,
+      status: status,
+      sections: sections,
+    };
+  }
 }

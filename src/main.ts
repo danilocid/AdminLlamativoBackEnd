@@ -40,5 +40,6 @@ async function bootstrap() {
   console.log('http://localhost:3000');
   console.log('Swagger running on port 3000/api/v1/api-docs');
   console.log('http://localhost:3000/api/v1/api-docs');
+  console.log('http://localhost/api/v1/api-docs');
 }
 bootstrap();

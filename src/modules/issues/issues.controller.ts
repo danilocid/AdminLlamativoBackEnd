@@ -42,7 +42,10 @@ export class IssuesController {
   findAll() {
     return this.issuesService.findAllIssues();
   }
-
+  @Get('resume')
+  getResume() {
+    return this.issuesService.resume();
+  }
   @ApiHeader({
     name: 'Authorization',
     description: 'the token we need for auth.',
@@ -91,6 +94,17 @@ export class IssuesController {
     return this.issuesService.findAllIssuesSeccions();
   }
 
+  @ApiHeader({
+    name: 'Authorization',
+    description: 'the token we need for auth.',
+    required: false,
+  })
+  @ApiOperation({
+    summary: 'Create one issue',
+    description: 'Create one issue',
+  })
+  @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth('jwt')
   @Post()
   create(@Body() createIssueDto: CreateIssueDto) {
     return this.issuesService.create(createIssueDto);
@@ -117,11 +131,33 @@ export class IssuesController {
     return this.issuesService.findOne(+id);
   }
 
+  @ApiHeader({
+    name: 'Authorization',
+    description: 'the token we need for auth.',
+    required: false,
+  })
+  @ApiOperation({
+    summary: 'Update one issue',
+    description: 'Update one issue',
+  })
+  @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth('jwt')
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateIssueDto: UpdateIssueDto) {
     return this.issuesService.update(+id, updateIssueDto);
   }
 
+  @ApiHeader({
+    name: 'Authorization',
+    description: 'the token we need for auth.',
+    required: false,
+  })
+  @ApiOperation({
+    summary: 'Delete one issue',
+    description: 'Delete one issue',
+  })
+  @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth('jwt')
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.issuesService.remove(+id);
