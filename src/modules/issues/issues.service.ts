@@ -191,36 +191,44 @@ export class IssuesService {
   }
 
   async resume() {
-    let types;
+    let types = [];
     let status;
     let sections;
     try {
-      //types = count of issues by type, with the name of the type, we need to use query builder because typeorm doesn't support count by relations
-      types = await this.issueRepository
-        .createQueryBuilder('issue')
-        .select('COUNT(issue.id)', 'count')
-        .addSelect('issue_type.type', 'type')
-        .innerJoin('issue.issueType', 'issue_type')
-        .groupBy('issue_type.id')
-        .getRawMany();
+      //get al issues types, with the count of issues of each type, need to include the name of the type, an de types without issues
+      let allTypes = await this.issueTypeRepository.find();
+      for (let i = 0; i < allTypes.length; i++) {
+        let count;
+        count = await this.issueRepository.query(
+          `SELECT COUNT(issue.id) as count FROM issue WHERE issueTypeId = ${allTypes[i].id}`,
+        );
+        types.push({ type: allTypes[i].type, count: count[0].count });
+      }
 
-      //status = count of issues by status, with the name of the status, we need to use query builder because typeorm doesn't support count by relations
-      status = await this.issueRepository
-        .createQueryBuilder('issue')
-        .select('COUNT(issue.id)', 'count')
-        .addSelect('issue_status.status', 'status')
-        .innerJoin('issue.issueStatus', 'issue_status')
-        .groupBy('issue_status.id')
-        .getRawMany();
+      //get al issues status, with the count of issues of each status, need to include the name of the status, an de status without issues
+      let allStatus = await this.issueStatusRepository.find();
+      status = [];
+      for (let i = 0; i < allStatus.length; i++) {
+        let count;
+        count = await this.issueRepository.query(
+          `SELECT COUNT(issue.id) as count FROM issue WHERE issueStatusId = ${allStatus[i].id}`,
+        );
+        status.push({ status: allStatus[i].status, count: count[0].count });
+      }
 
-      //sections = count of issues by section, with the name of the section, we need to use query builder because typeorm doesn't support count by relations
-      sections = await this.issueRepository
-        .createQueryBuilder('issue')
-        .select('COUNT(issue.id)', 'count')
-        .addSelect('issue_section.section', 'section')
-        .innerJoin('issue.issueSection', 'issue_section')
-        .groupBy('issue_section.id')
-        .getRawMany();
+      //get al issues sections, with the count of issues of each section, need to include the name of the section, an de sections without issues
+      let allSections = await this.issueSectionRepository.find();
+      sections = [];
+      for (let i = 0; i < allSections.length; i++) {
+        let count;
+        count = await this.issueRepository.query(
+          `SELECT COUNT(issue.id) as count FROM issue WHERE issueSectionId = ${allSections[i].id}`,
+        );
+        sections.push({
+          section: allSections[i].section,
+          count: count[0].count,
+        });
+      }
     } catch (error) {
       console.log(error);
       throw new InternalServerErrorException({

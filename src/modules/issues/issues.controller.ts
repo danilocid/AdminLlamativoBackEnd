@@ -42,6 +42,18 @@ export class IssuesController {
   findAll() {
     return this.issuesService.findAllIssues();
   }
+
+  @ApiHeader({
+    name: 'Authorization',
+    description: 'the token we need for auth.',
+    required: false,
+  })
+  @ApiOperation({
+    summary: 'Get all issues resume',
+    description: 'Get all issues resume',
+  })
+  @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth('jwt')
   @Get('resume')
   getResume() {
     return this.issuesService.resume();
