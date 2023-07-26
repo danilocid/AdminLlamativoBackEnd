@@ -165,6 +165,19 @@ export class IssuesService {
       issue.title = updateIssueDto.title;
     }
 
+    //check if issue description exists on UpdateIssueDto, if it does, check if it exists on the database
+    if (updateIssueDto.description) {
+      let issueDescription = await this.issueRepository.findOne({
+        where: { description: updateIssueDto.description },
+      });
+      if (issueDescription && issueDescription.id !== id) {
+        throw new NotFoundException({
+          message: `Issue with description ${updateIssueDto.description} already exists`,
+        });
+      }
+      issue.description = updateIssueDto.description;
+    }
+
     //update issue
     issue = await this.issueRepository.save(issue);
 
