@@ -28,7 +28,6 @@ export class IssuesService {
   ) {}
 
   async create(createIssueDto: CreateIssueDto) {
-    console.log(createIssueDto);
     let issue = this.issueRepository.create(createIssueDto as unknown as Issue);
     try {
       issue.issueStatus = await this.issueStatusRepository.findOne({
@@ -56,9 +55,7 @@ export class IssuesService {
         });
       }
       issue = await this.issueRepository.save(issue);
-      console.log(issue);
     } catch (error) {
-      console.log(error);
       if (error.code === 'ER_DUP_ENTRY') {
         throw new InternalServerErrorException({
           message: 'Error creating issue',
