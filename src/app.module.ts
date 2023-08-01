@@ -4,6 +4,9 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CommonModule } from './modules/common/common.module';
 import { IssuesModule } from './modules/issues/issues.module';
+import { ClientsModule } from './modules/clients/clients.module';
+import { join } from 'path';
+import { ServeStaticModule } from '@nestjs/serve-static';
 
 require('dotenv');
 
@@ -22,7 +25,11 @@ require('dotenv');
       entities: ['dist/**/*.entity{.ts,.js}'],
       synchronize: true,
     }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'public'),
+    }),
     LoginModule,
+    ClientsModule,
     IssuesModule,
     CommonModule,
   ],
