@@ -3,11 +3,11 @@ require("dotenv").config();
 
 exports.initFunction = function () {
   var connection = mysql.createConnection({
-    host: process.env.DB_HOST,
+    host: "190.13.188.105",
     port: process.env.DB_PORT,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
+    user: "orhanoik_sivig_laravel",
+    password: "94679847Ad-$",
+    database: "orhanoik_sivig_laravel",
   });
 
   connection.connect();
