@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateClientDto } from './dto/create-client.dto';
 import { UpdateClientDto } from './dto/update-client.dto';
-import { In, Not, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Client } from './entities/client.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Region } from '../common/entities/regions.entity';
@@ -18,19 +18,14 @@ export class ClientsService {
     private readonly commune: Repository<Comuns>,
   ) {}
   async create(createClientDto: CreateClientDto) {
-    console.log(createClientDto);
-    console.log(createClientDto.rut);
     //validate if client exist, where rut = rut or name = name
     let client = await this.client.findOne({
       where: [{ rut: createClientDto.rut }, { name: createClientDto.name }],
     });
-    console.log(client);
     if (client) {
       throw new NotFoundException('Client already exist');
     }
     //validate RUT
-    console.log(this.esRutValido('18109289-0')); // true
-    console.log(this.esRutValido(createClientDto.rut));
     if (!this.esRutValido(createClientDto.rut)) {
       throw new NotFoundException('RUT is not valid');
     }
@@ -51,8 +46,6 @@ export class ClientsService {
     if (!region) {
       throw new NotFoundException('Region not found');
     }
-    console.log(region);
-    console.log(commune);
 
     //validate region and commune match
     if (region.id != commune.region.id) {
@@ -70,7 +63,6 @@ export class ClientsService {
       region: region,
       commune: commune,
     };
-    console.log(newclient);
     client = await this.client.create(newclient);
     await this.client.save(client);
     return client;
@@ -95,10 +87,7 @@ export class ClientsService {
   }
 
   async update(rut: string, updateClientDto: UpdateClientDto) {
-    console.log(updateClientDto);
     //validate RUT
-    console.log(this.esRutValido('18109289-0')); // true
-    console.log(this.esRutValido(rut));
     if (!this.esRutValido(rut)) {
       throw new NotFoundException('RUT is not valid');
     }
@@ -134,8 +123,6 @@ export class ClientsService {
     if (!region) {
       throw new NotFoundException('Region not found');
     }
-    console.log(region);
-    console.log(commune);
 
     //validate region and commune match
     if (region.id != commune.region.id) {
@@ -153,7 +140,6 @@ export class ClientsService {
       region: region,
       commune: commune,
     };
-    console.log(newclient);
     client = await this.client.merge(client, newclient);
     await this.client.save(client);
     return client;
