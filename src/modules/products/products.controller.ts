@@ -31,6 +31,22 @@ export class ProductsController {
     required: false,
   })
   @ApiOperation({
+    summary: 'Delete a product',
+    description: 'Delete a product',
+  })
+  @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth('jwt')
+  @Get('/movementTypes')
+  getMovementTypes() {
+    return this.productsService.getMovementsTypes();
+  }
+
+  @ApiHeader({
+    name: 'Authorization',
+    description: 'the token we need for auth.',
+    required: false,
+  })
+  @ApiOperation({
     summary: 'Create a product',
     description: 'Create a product',
   })

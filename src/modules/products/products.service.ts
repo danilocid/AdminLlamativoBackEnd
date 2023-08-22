@@ -7,13 +7,19 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Product } from './entities/product.entity';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
+import { MovementType } from './entities/movementType.entity';
+import { MovementDetail } from './entities/movementDetail.entity';
 
 @Injectable()
 export class ProductsService {
   constructor(
     @InjectRepository(Product)
     private productRepository: Repository<Product>,
+    @InjectRepository(MovementType)
+    private movementTypeRepository: Repository<MovementType>,
+    @InjectRepository(MovementDetail)
+    private movementDetailRepository: Repository<MovementDetail>,
   ) {}
 
   async create(createProductDto: CreateProductDto) {
@@ -58,15 +64,29 @@ export class ProductsService {
   }
 
   async findOne(id: number) {
-    let product = await this.productRepository.findOne({
+    const product: Product = await this.productRepository.findOne({
       where: { id: id },
     });
+
     if (!product) {
       throw new NotFoundException({
         message: `Product with id ${id} not found`,
       });
     }
-    return product;
+
+    let movementDetails = await this.movementDetailRepository.find({
+      relations: ['movementType'],
+      where: {
+        product: {
+          id: id,
+        },
+      },
+    });
+
+    return {
+      product: product,
+      movementDetails: movementDetails,
+    };
   }
 
   async update(id: number, updateProductDto: UpdateProductDto) {
@@ -105,5 +125,21 @@ export class ProductsService {
     );
 
     return updateProductDto;
+  }
+
+  async getMovementsTypes() {
+    let movementsTypes = await this.movementTypeRepository.find();
+    console.log(movementsTypes);
+    return movementsTypes;
+  }
+
+  async addMovementDetail(movementDetail: MovementDetail) {
+    console.log(movementDetail);
+    //remove id
+    delete movementDetail.id;
+    let newMovementDetail = await this.movementDetailRepository.save(
+      movementDetail,
+    );
+    console.log(newMovementDetail);
   }
 }

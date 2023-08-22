@@ -14,10 +14,10 @@ export class LoginController {
     description: 'User email',
     type: LoginDto,
     examples: {
-      example1: {
+      correctLogin: {
         value: {
-          mail: 'correo@gmail.com',
-          password: '123456',
+          mail: 'danilo.cid.v@gmail.com',
+          password: '94679847',
         },
       },
     },
