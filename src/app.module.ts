@@ -8,6 +8,7 @@ import { ClientsModule } from './modules/clients/clients.module';
 import { join } from 'path';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { ProductsModule } from './modules/products/products.module';
+import { InventoryModule } from './modules/inventory/inventory.module';
 
 require('dotenv');
 
@@ -32,6 +33,7 @@ require('dotenv');
     LoginModule,
     ClientsModule,
     ProductsModule,
+    InventoryModule,
     CommonModule,
     IssuesModule,
   ],
