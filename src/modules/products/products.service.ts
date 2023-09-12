@@ -129,7 +129,6 @@ export class ProductsService {
 
   async getMovementsTypes() {
     let movementsTypes = await this.movementTypeRepository.find();
-    console.log(movementsTypes);
     return movementsTypes;
   }
 
