@@ -7,7 +7,7 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Product } from './entities/product.entity';
-import { In, Repository } from 'typeorm';
+import { Repository, Not } from 'typeorm';
 import { MovementType } from './entities/movementType.entity';
 import { MovementDetail } from './entities/movementDetail.entity';
 
@@ -58,8 +58,20 @@ export class ProductsService {
     return newproduct;
   }
 
-  async findAll() {
-    let products = await this.productRepository.find();
+  async findAll(active: boolean, stock: boolean) {
+    console.log(active);
+    console.log('stock', stock);
+    let products;
+    if (stock) {
+      //get products with stock, the stock need to be greater than 0
+      products = await this.productRepository.find({
+        where: {
+          stock: Not(0),
+        },
+      });
+    } else {
+      products = await this.productRepository.find();
+    }
     return products;
   }
 
@@ -136,9 +148,8 @@ export class ProductsService {
     console.log(movementDetail);
     //remove id
     delete movementDetail.id;
-    let newMovementDetail = await this.movementDetailRepository.save(
-      movementDetail,
-    );
+    let newMovementDetail =
+      await this.movementDetailRepository.save(movementDetail);
     console.log(newMovementDetail);
   }
 }

@@ -50,7 +50,10 @@ ENV DB_DATABASE ${DB_NAME}
 ENV JWT_SECRET test
 
 # set the .env file
-COPY --chown=node:node .env ./
+# copy the .env_prod file to the container, and rename it to .env
+COPY --chown=node:node .env_prod .env
+
+
 
 
 
