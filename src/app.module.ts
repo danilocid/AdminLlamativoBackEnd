@@ -10,6 +10,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { ProductsModule } from './modules/products/products.module';
 import { InventoryModule } from './modules/inventory/inventory.module';
 import { SalesModule } from './modules/sales/sales.module';
+import { ReportsModule } from './modules/reports/reports.module';
 
 require('dotenv');
 
@@ -38,6 +39,7 @@ require('dotenv');
     SalesModule,
     CommonModule,
     IssuesModule,
+    ReportsModule,
   ],
   controllers: [],
   providers: [],

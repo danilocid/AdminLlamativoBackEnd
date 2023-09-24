@@ -30,8 +30,8 @@ export class SalesController {
     summary: 'Create a sale',
     description: 'Create a sale',
   })
-  /* @UseGuards(AuthGuard('jwt'))
-  @ApiBearerAuth('jwt') */
+  @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth('jwt')
   @Post()
   create(@Body() createSaleDto: CreateSaleDto) {
     return this.salesService.create(createSaleDto);
@@ -45,8 +45,8 @@ export class SalesController {
     summary: 'Get all sales',
     description: 'Get all sales',
   })
-  /* @UseGuards(AuthGuard('jwt'))
-  @ApiBearerAuth('jwt') */
+  @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth('jwt')
   @Get()
   findAll() {
     return this.salesService.findAll();
@@ -61,8 +61,8 @@ export class SalesController {
     summary: 'Get a sale',
     description: 'Get a sale',
   })
-  /*  @UseGuards(AuthGuard('jwt'))
-  @ApiBearerAuth('jwt') */
+  @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth('jwt')
   @Get(':id')
   findOne(@Param('id') id: number) {
     return this.salesService.findOne(+id);
