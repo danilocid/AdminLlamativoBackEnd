@@ -1,11 +1,11 @@
 const functions = require("firebase-functions");
-var utils = require("../controller/salesController");
+const utils = require("../controller/salesController");
 const cors = require("cors")({
-  origin: "*",
-  origin: "https://localhost:4200",
-  origin: "https://sivig-ae865.web.app",
-  origin: "https://sivig-ae865.firebaseapp.com",
-  origin: "*",
+  origin: [
+    "https://llamativo-admin.web.app",
+    "https://llamativo-admin.firebaseapp.com",
+    "https://localhost:4200",
+  ],
   credentials: true,
 });
 

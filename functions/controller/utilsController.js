@@ -1,10 +1,10 @@
-var DbConnection = require("../util/dbConnection");
-var jwt = require("jsonwebtoken");
+const DbConnection = require("../util/dbConnection");
+const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 exports.getAllRegions = (req, res) => {
   // validate token
-  var token = req.headers.token;
+  const token = req.headers.token;
   if (token === undefined) {
     return res.status(403).json({
       ok: false,
@@ -12,11 +12,11 @@ exports.getAllRegions = (req, res) => {
     });
   } else {
     try {
-      var { uid } = jwt.verify(token, process.env.JWT_SECRET);
+      const { uid } = jwt.verify(token, process.env.JWT_SECRET);
       req.uid = uid;
       console.log("uid: " + uid);
-      var connection = DbConnection.initFunction();
-      var sql = "SELECT * FROM regiones";
+      const connection = DbConnection.initFunction();
+      const sql = "SELECT * FROM regiones";
       connection.query(sql, (err, result) => {
         connection.end();
         if (err) {
@@ -43,9 +43,9 @@ exports.getAllRegions = (req, res) => {
   }
 };
 
-//get all comunas by regionid
+// get all comunas by regionid
 exports.getAllComunasByRegionId = (req, res) => {
-  var token = req.headers.token;
+  const token = req.headers.token;
   if (token === undefined) {
     return res.status(403).json({
       ok: false,
@@ -54,18 +54,18 @@ exports.getAllComunasByRegionId = (req, res) => {
   } else {
     //
     try {
-      var { uid } = jwt.verify(token, process.env.JWT_SECRET);
+      const { uid } = jwt.verify(token, process.env.JWT_SECRET);
       req.uid = uid;
       console.log("uid: " + uid);
-      //validate regionid
+      // validate regionid
       if (req.body.regionid === undefined) {
         return res.status(403).json({
           ok: false,
           msg: "No hay regionid",
         });
       }
-      var connection = DbConnection.initFunction();
-      var sql = "SELECT * FROM comunas WHERE region_id = ?";
+      const connection = DbConnection.initFunction();
+      const sql = "SELECT * FROM comunas WHERE region_id = ?";
       connection.query(sql, [req.body.regionid], (err, result) => {
         connection.end();
         if (err) {
@@ -93,7 +93,7 @@ exports.getAllComunasByRegionId = (req, res) => {
 };
 
 exports.getAllTipoDocumento = (req, res) => {
-  var token = req.headers.token;
+  const token = req.headers.token;
   if (token === undefined) {
     return res.status(403).json({
       ok: false,
@@ -101,11 +101,11 @@ exports.getAllTipoDocumento = (req, res) => {
     });
   } else {
     try {
-      var { uid } = jwt.verify(token, process.env.JWT_SECRET);
+      const { uid } = jwt.verify(token, process.env.JWT_SECRET);
       req.uid = uid;
       console.log("uid: " + uid);
-      var connection = DbConnection.initFunction();
-      var sql = "SELECT * FROM tipo_documento";
+      const connection = DbConnection.initFunction();
+      const sql = "SELECT * FROM tipo_documento";
       connection.query(sql, (err, result) => {
         connection.end();
         if (err) {
@@ -133,7 +133,7 @@ exports.getAllTipoDocumento = (req, res) => {
 };
 
 exports.getAllMedioPago = (req, res) => {
-  var token = req.headers.token;
+  const token = req.headers.token;
   if (token === undefined) {
     return res.status(403).json({
       ok: false,
@@ -141,11 +141,11 @@ exports.getAllMedioPago = (req, res) => {
     });
   } else {
     try {
-      var { uid } = jwt.verify(token, process.env.JWT_SECRET);
+      const { uid } = jwt.verify(token, process.env.JWT_SECRET);
       req.uid = uid;
       console.log("uid: " + uid);
-      var connection = DbConnection.initFunction();
-      var sql = "SELECT * FROM medios_de_pago";
+      const connection = DbConnection.initFunction();
+      const sql = "SELECT * FROM medios_de_pago";
       connection.query(sql, (err, result) => {
         connection.end();
         if (err) {

@@ -1,10 +1,10 @@
-var DbConnection = require("../util/dbConnection");
-var jwt = require("jsonwebtoken");
+const DbConnection = require("../util/dbConnection");
+const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 exports.getAllClients = (req, res) => {
   // validate token
-  var token = req.headers.token;
+  const token = req.headers.token;
   if (token === undefined) {
     return res.status(403).json({
       ok: false,
@@ -12,11 +12,11 @@ exports.getAllClients = (req, res) => {
     });
   } else {
     try {
-      var { uid } = jwt.verify(token, process.env.JWT_SECRET);
+      const { uid } = jwt.verify(token, process.env.JWT_SECRET);
       req.uid = uid;
       console.log("uid: " + uid);
-      var connection = DbConnection.initFunction();
-      var sql =
+      const connection = DbConnection.initFunction();
+      let sql =
         "SELECT clientes.*, regiones.region, comunas.comuna FROM clientes";
       sql += " INNER JOIN regiones ON clientes.id_region = regiones.id";
       sql += " INNER JOIN comunas ON clientes.id_comuna = comunas.id";
@@ -49,14 +49,14 @@ exports.getAllClients = (req, res) => {
 
 exports.getClientByRut = (req, res) => {
   // validate token
-  var token = req.headers.token;
+  const token = req.headers.token;
   if (token === undefined) {
     return res.status(403).json({
       ok: false,
       msg: "No hay token",
     });
   } else {
-    //validate rut exists
+    // validate rut exists
     if (req.body.rut === undefined) {
       return res.status(403).json({
         ok: false,
@@ -64,12 +64,12 @@ exports.getClientByRut = (req, res) => {
       });
     } else {
       try {
-        var { uid } = jwt.verify(token, process.env.JWT_SECRET);
-        var rut = req.body.rut;
+        const { uid } = jwt.verify(token, process.env.JWT_SECRET);
+        const rut = req.body.rut;
         req.uid = uid;
         console.log("uid: " + uid);
-        var connection = DbConnection.initFunction();
-        var sql =
+        const connection = DbConnection.initFunction();
+        let sql =
           "SELECT clientes.*, regiones.region, comunas.comuna FROM clientes";
         sql += " INNER JOIN regiones ON regiones.id = clientes.id_region";
         sql += " INNER JOIN comunas ON clientes.id_comuna = comunas.id";
@@ -104,8 +104,8 @@ exports.getClientByRut = (req, res) => {
 };
 
 exports.createClient = (req, res) => {
-  //validate token
-  var token = req.headers.token;
+  // validate token
+  const token = req.headers.token;
   if (token === undefined) {
     res.status(403).json({
       ok: false,
@@ -154,12 +154,12 @@ exports.createClient = (req, res) => {
       });
     } else {
       try {
-        var { uid } = jwt.verify(token, process.env.JWT_SECRET);
+        const { uid } = jwt.verify(token, process.env.JWT_SECRET);
         req.uid = uid;
         console.log("uid: " + uid);
-        var connection = DbConnection.initFunction();
-        var sql = "INSERT INTO clientes SET ?";
-        var data = {
+        const connection = DbConnection.initFunction();
+        const sql = "INSERT INTO clientes SET ?";
+        const data = {
           rut: req.body.rut,
           nombre: req.body.nombre,
           giro: req.body.giro,
@@ -173,7 +173,7 @@ exports.createClient = (req, res) => {
           connection.end();
           if (err) {
             console.log(err);
-            //if rut already exists
+            // if rut already exists
             if (err.errno === 1062) {
               return res.status(403).json({
                 ok: false,
@@ -206,8 +206,8 @@ exports.createClient = (req, res) => {
 };
 
 exports.updateClient = (req, res) => {
-  //validate token
-  var token = req.headers.token;
+  // validate token
+  const token = req.headers.token;
   if (token === undefined) {
     res.status(403).json({
       ok: false,
@@ -256,12 +256,12 @@ exports.updateClient = (req, res) => {
       });
     } else {
       try {
-        var { uid } = jwt.verify(token, process.env.JWT_SECRET);
+        const { uid } = jwt.verify(token, process.env.JWT_SECRET);
         req.uid = uid;
         console.log("uid: " + uid);
-        var connection = DbConnection.initFunction();
-        var sql = "UPDATE clientes SET ? WHERE rut = ?";
-        var data = {
+        const connection = DbConnection.initFunction();
+        const sql = "UPDATE clientes SET ? WHERE rut = ?";
+        const data = {
           nombre: req.body.nombre,
           giro: req.body.giro,
           direccion: req.body.direccion,

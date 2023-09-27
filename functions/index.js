@@ -1,25 +1,14 @@
-const functions = require("firebase-functions");
-const async = require("async");
-const cors = require("cors")({
-  origin: "*",
-  origin: "https://localhost:4200",
-  origin: "https://sivig-ae865.web.app",
-  origin: "https://sivig-ae865.firebaseapp.com",
-  origin: "*",
-  credentials: true,
-});
-
-//login
+// login
 
 exports.users = require("./routes/users");
 
-//issues
+// issues
 exports.issues = require("./routes/issues");
-//products
+// products
 exports.products = require("./routes/products");
-//utils
+// utils
 exports.utils = require("./routes/utils");
-//clients
+// clients
 exports.clients = require("./routes/clients");
-//sales
+// sales
 exports.sales = require("./routes/sales");

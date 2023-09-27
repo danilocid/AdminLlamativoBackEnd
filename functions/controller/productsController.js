@@ -1,10 +1,10 @@
-var DbConnection = require("../util/dbConnection");
-var jwt = require("jsonwebtoken");
+const DbConnection = require("../util/dbConnection");
+const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
-exports.getAllProducts = function (req, res, conStock = false, activo = true) {
+exports.getAllProducts = function(req, res, conStock = false, activo = true) {
   // validate token
-  var token = req.headers.token;
+  const token = req.headers.token;
   if (token === undefined) {
     return res.status(403).json({
       ok: false,
@@ -12,7 +12,7 @@ exports.getAllProducts = function (req, res, conStock = false, activo = true) {
     });
   } else {
     try {
-      var { uid } = jwt.verify(token, process.env.JWT_SECRET);
+      const { uid } = jwt.verify(token, process.env.JWT_SECRET);
       req.uid = uid;
       console.log(req.query);
       activo = req.query.active;
@@ -28,17 +28,18 @@ exports.getAllProducts = function (req, res, conStock = false, activo = true) {
       }
       console.log("conStock: " + conStock);
       console.log("uid: " + uid);
-      var connection = DbConnection.initFunction();
+      const connection = DbConnection.initFunction();
+      let query = `SELECT * FROM articulos`;
       if (!conStock || conStock === "false") {
         console.log("no con stock");
-        var query = `SELECT * FROM articulos`;
+
         if (activo === "true") {
           console.log("activo");
           query += ` WHERE activo = 1`;
         }
       } else {
         console.log("con stock");
-        var query = `SELECT * FROM articulos WHERE stock > 0`;
+        query = `SELECT * FROM articulos WHERE stock > 0`;
         if (activo === "true") {
           console.log("activo");
           query += ` AND activo = 1`;
@@ -59,7 +60,7 @@ exports.getAllProducts = function (req, res, conStock = false, activo = true) {
             msg: "No hay productos",
           });
         }
-        //console.log("result: " + result);
+        // console.log("result: " + result);
         return res.status(200).json({
           ok: true,
           msg: "Productos encontrados",
@@ -76,10 +77,10 @@ exports.getAllProducts = function (req, res, conStock = false, activo = true) {
   }
 };
 
-exports.getProduct = function (req, res) {
+exports.getProduct = function(req, res) {
   // validate token
-  var token = req.headers.token;
-  var id = req.body.id;
+  const token = req.headers.token;
+  const id = req.body.id;
   if (token === undefined) {
     return res.status(403).json({
       ok: false,
@@ -92,11 +93,11 @@ exports.getProduct = function (req, res) {
     });
   } else {
     try {
-      var { uid } = jwt.verify(token, process.env.JWT_SECRET);
+      const { uid } = jwt.verify(token, process.env.JWT_SECRET);
       req.uid = uid;
       console.log("uid: " + uid);
-      var connection = DbConnection.initFunction();
-      var query = `SELECT * FROM articulos WHERE id = ${id}`;
+      const connection = DbConnection.initFunction();
+      const query = `SELECT * FROM articulos WHERE id = ${id}`;
       connection.query(query, (err, result) => {
         connection.end();
         if (err) {
@@ -128,10 +129,10 @@ exports.getProduct = function (req, res) {
   }
 };
 
-exports.getProductWithMovements = function (req, res) {
+exports.getProductWithMovements = function(req, res) {
   // validate token
-  var token = req.headers.token;
-  var id = req.body.id;
+  const token = req.headers.token;
+  const id = req.body.id;
   if (token === undefined) {
     return res.status(403).json({
       ok: false,
@@ -144,12 +145,12 @@ exports.getProductWithMovements = function (req, res) {
     });
   } else {
     try {
-      var { uid } = jwt.verify(token, process.env.JWT_SECRET);
+      const { uid } = jwt.verify(token, process.env.JWT_SECRET);
       req.uid = uid;
       console.log("uid: " + uid);
-      var connection = DbConnection.initFunction();
+      const connection = DbConnection.initFunction();
 
-      var query = `SELECT * FROM articulos WHERE id = ${id}`;
+      const query = `SELECT * FROM articulos WHERE id = ${id}`;
       connection.query(query, (err, result) => {
         if (err) {
           connection.end();
@@ -166,7 +167,7 @@ exports.getProductWithMovements = function (req, res) {
             msg: "No hay productos",
           });
         }
-        var query = `SELECT detalle_movimientos_articulos.*, tipo_movimientos.tipo_movimiento, users.name FROM detalle_movimientos_articulos `;
+        let query = `SELECT detalle_movimientos_articulos.*, tipo_movimientos.tipo_movimiento, users.name FROM detalle_movimientos_articulos `;
         query += `LEFT JOIN tipo_movimientos ON (tipo_movimientos.id = detalle_movimientos_articulos.movimiento_id) `;
         query += `LEFT JOIN users ON (users.id = detalle_movimientos_articulos.usuario_id) `;
         query += `WHERE detalle_movimientos_articulos.producto_id = ${id}`;
@@ -198,19 +199,19 @@ exports.getProductWithMovements = function (req, res) {
   }
 };
 
-exports.updateProduct = function (req, res) {
+exports.updateProduct = function(req, res) {
   // validate token
-  var token = req.headers.token;
-  var id = req.body.id;
-  var cod_interno = req.body.cod_interno;
-  var cod_barras = req.body.cod_barras;
-  var descripcion = req.body.descripcion;
-  var costo_neto = req.body.costo_neto;
-  var costo_imp = req.body.costo_imp;
-  var venta_neto = req.body.venta_neto;
-  var venta_imp = req.body.venta_imp;
-  var stock_critico = req.body.stock_critico;
-  var activo = req.body.activo;
+  const token = req.headers.token;
+  const id = req.body.id;
+  const cod_interno = req.body.cod_interno;
+  const cod_barras = req.body.cod_barras;
+  const descripcion = req.body.descripcion;
+  const costo_neto = req.body.costo_neto;
+  const costo_imp = req.body.costo_imp;
+  const venta_neto = req.body.venta_neto;
+  const venta_imp = req.body.venta_imp;
+  const stock_critico = req.body.stock_critico;
+  const activo = req.body.activo;
   if (token === undefined) {
     return res.status(403).json({
       ok: false,
@@ -254,11 +255,11 @@ exports.updateProduct = function (req, res) {
     });
   } else {
     try {
-      var { uid } = jwt.verify(token, process.env.JWT_SECRET);
+      const { uid } = jwt.verify(token, process.env.JWT_SECRET);
       req.uid = uid;
       console.log("uid: " + uid);
-      var connection = DbConnection.initFunction();
-      var query = `UPDATE articulos SET cod_interno = '${cod_interno}', cod_barras = '${cod_barras}', descripcion = '${descripcion}', costo_neto = '${costo_neto}', costo_imp = '${costo_imp}', venta_neto = '${venta_neto}', venta_imp = '${venta_imp}', stock_critico = '${stock_critico}', activo = '${activo}' WHERE id = ${id}`;
+      const connection = DbConnection.initFunction();
+      const query = `UPDATE articulos SET cod_interno = '${cod_interno}', cod_barras = '${cod_barras}', descripcion = '${descripcion}', costo_neto = '${costo_neto}', costo_imp = '${costo_imp}', venta_neto = '${venta_neto}', venta_imp = '${venta_imp}', stock_critico = '${stock_critico}', activo = '${activo}' WHERE id = ${id}`;
       connection.query(query, (err, result) => {
         connection.end();
         if (err) {
@@ -289,18 +290,18 @@ exports.updateProduct = function (req, res) {
   }
 };
 
-exports.createProduct = function (req, res) {
+exports.createProduct = function(req, res) {
   // validate token
-  var token = req.headers.token;
-  var cod_interno = req.body.cod_interno;
-  var cod_barras = req.body.cod_barras;
-  var descripcion = req.body.descripcion;
-  var costo_neto = req.body.costo_neto;
-  var costo_imp = req.body.costo_imp;
-  var venta_neto = req.body.venta_neto;
-  var venta_imp = req.body.venta_imp;
-  var stock_critico = req.body.stock_critico;
-  var activo = req.body.activo;
+  const token = req.headers.token;
+  const cod_interno = req.body.cod_interno;
+  const cod_barras = req.body.cod_barras;
+  const descripcion = req.body.descripcion;
+  const costo_neto = req.body.costo_neto;
+  const costo_imp = req.body.costo_imp;
+  const venta_neto = req.body.venta_neto;
+  const venta_imp = req.body.venta_imp;
+  const stock_critico = req.body.stock_critico;
+  const activo = req.body.activo;
   if (token === undefined) {
     return res.status(403).json({
       ok: false,
@@ -341,11 +342,11 @@ exports.createProduct = function (req, res) {
     });
   } else {
     try {
-      var { uid } = jwt.verify(token, process.env.JWT_SECRET);
+      const { uid } = jwt.verify(token, process.env.JWT_SECRET);
       req.uid = uid;
       console.log("uid: " + uid);
-      var connection = DbConnection.initFunction();
-      var query = `INSERT INTO articulos (cod_interno, cod_barras, descripcion, costo_neto, costo_imp, venta_neto, venta_imp, stock_critico, stock, activo, created_at, updated_at) VALUES ('${cod_interno}', '${cod_barras}', '${descripcion}', '${costo_neto}', '${costo_imp}', '${venta_neto}', '${venta_imp}', '${stock_critico}', 0, '${activo}', NOW(), NOW())`;
+      const connection = DbConnection.initFunction();
+      const query = `INSERT INTO articulos (cod_interno, cod_barras, descripcion, costo_neto, costo_imp, venta_neto, venta_imp, stock_critico, stock, activo, created_at, updated_at) VALUES ('${cod_interno}', '${cod_barras}', '${descripcion}', '${costo_neto}', '${costo_imp}', '${venta_neto}', '${venta_imp}', '${stock_critico}', 0, '${activo}', NOW(), NOW())`;
       connection.query(query, (err, result) => {
         connection.end();
         if (err) {
@@ -384,9 +385,9 @@ exports.createProduct = function (req, res) {
   }
 };
 
-exports.getLastCountedProducts = function (req, res) {
+exports.getLastCountedProducts = function(req, res) {
   // validate token
-  var token = req.headers.token;
+  const token = req.headers.token;
   if (token === undefined) {
     return res.status(403).json({
       ok: false,
@@ -394,11 +395,11 @@ exports.getLastCountedProducts = function (req, res) {
     });
   } else {
     try {
-      var { uid } = jwt.verify(token, process.env.JWT_SECRET);
+      const { uid } = jwt.verify(token, process.env.JWT_SECRET);
       req.uid = uid;
       console.log("uid: " + uid);
-      var connection = DbConnection.initFunction();
-      var query = `SELECT * FROM articulos ORDER BY last_cont ASC LIMIT 5`;
+      const connection = DbConnection.initFunction();
+      const query = `SELECT * FROM articulos ORDER BY last_cont ASC LIMIT 5`;
       connection.query(query, (err, result) => {
         connection.end();
         if (err) {
@@ -430,8 +431,8 @@ exports.getLastCountedProducts = function (req, res) {
   }
 };
 
-exports.getAllMovementsTypes = function (req, res) {
-  var token = req.headers.token;
+exports.getAllMovementsTypes = function(req, res) {
+  const token = req.headers.token;
   if (token === undefined) {
     return res.status(403).json({
       ok: false,
@@ -439,11 +440,11 @@ exports.getAllMovementsTypes = function (req, res) {
     });
   } else {
     try {
-      var { uid } = jwt.verify(token, process.env.JWT_SECRET);
+      const { uid } = jwt.verify(token, process.env.JWT_SECRET);
       req.uid = uid;
       console.log("uid: " + uid);
-      var connection = DbConnection.initFunction();
-      var query = `SELECT * FROM tipo_movimientos`;
+      const connection = DbConnection.initFunction();
+      const query = `SELECT * FROM tipo_movimientos`;
       connection.query(query, (err, result) => {
         connection.end();
         if (err) {
@@ -475,9 +476,9 @@ exports.getAllMovementsTypes = function (req, res) {
   }
 };
 
-exports.saveMovement = function (req, res) {
+exports.saveMovement = function(req, res) {
   // validate token
-  var token = req.headers.token;
+  const token = req.headers.token;
   if (token === undefined) {
     return res.status(403).json({
       ok: false,
@@ -485,17 +486,17 @@ exports.saveMovement = function (req, res) {
     });
   } else {
     try {
-      var { uid } = jwt.verify(token, process.env.JWT_SECRET);
+      const { uid } = jwt.verify(token, process.env.JWT_SECRET);
       req.uid = uid;
       console.log("uid: " + uid);
-      var tipo_movimiento = req.body.tipo_movimiento;
-      var obs = req.body.obs;
-      var articulos = req.body.articulos;
-      var costo_neto = req.body.costo_neto;
-      var costo_imp = req.body.costo_imp;
-      var entradas = req.body.entradas;
-      var salidas = req.body.salidas;
-      var idAjuste = 0;
+      const tipo_movimiento = req.body.tipo_movimiento;
+      const obs = req.body.obs;
+      const articulos = req.body.articulos;
+      const costo_neto = req.body.costo_neto;
+      const costo_imp = req.body.costo_imp;
+      const entradas = req.body.entradas;
+      const salidas = req.body.salidas;
+      let idAjuste = 0;
       if (
         tipo_movimiento === undefined ||
         tipo_movimiento === null ||
@@ -512,9 +513,9 @@ exports.saveMovement = function (req, res) {
           msg: "Todos los campos son requeridos",
         });
       } else {
-        //save movement in db
-        var connection = DbConnection.initFunction();
-        var query = `INSERT INTO ajustes_de_inventarios (tipo_movimiento_id, observaciones,  costo_neto, costo_imp, entradas, salidas, created_at, updated_at, user_id) VALUES ('${tipo_movimiento}', '${obs}',  '${costo_neto}', '${costo_imp}', '${entradas}', '${salidas}', NOW(), NOW(), '${uid}')`;
+        // save movement in db
+        const connection = DbConnection.initFunction();
+        const query = `INSERT INTO ajustes_de_inventarios (tipo_movimiento_id, observaciones,  costo_neto, costo_imp, entradas, salidas, created_at, updated_at, user_id) VALUES ('${tipo_movimiento}', '${obs}',  '${costo_neto}', '${costo_imp}', '${entradas}', '${salidas}', NOW(), NOW(), '${uid}')`;
         connection.query(query, (err, result) => {
           if (err) {
             return res.status(500).json({
@@ -525,15 +526,15 @@ exports.saveMovement = function (req, res) {
           }
           idAjuste = result.insertId;
           console.log("idAjuste: " + idAjuste);
-          //save movement details in db
+          // save movement details in db
           let error = false;
-          let errorMessages = [];
-          var query2 = `INSERT INTO detalle_ajustes_de_inventarios (ajuste_de_inventario_id, articulo_id, costo_neto, costo_imp, entradas, salidas, created_at, updated_at) VALUES ?`;
-          var values = [];
+          const errorMessages = [];
+          const query2 = `INSERT INTO detalle_ajustes_de_inventarios (ajuste_de_inventario_id, articulo_id, costo_neto, costo_imp, entradas, salidas, created_at, updated_at) VALUES ?`;
+          let values = [];
           articulos.forEach((articulo) => {
             values = [];
-            //date utc - 3
-            var now = new Date();
+            // date utc - 3
+            const now = new Date();
             now.setHours(now.getHours() - 3);
 
             values.push([
@@ -556,8 +557,8 @@ exports.saveMovement = function (req, res) {
                 console.log("result: " + result);
 
                 values = [];
-                //update stock and update_at
-                var query3 = `UPDATE articulos SET stock = stock + ${articulo.entradas} - ${articulo.salidas}, updated_at = NOW() WHERE id = ${articulo.id}`;
+                // update stock and update_at
+                const query3 = `UPDATE articulos SET stock = stock + ${articulo.entradas} - ${articulo.salidas}, updated_at = NOW() WHERE id = ${articulo.id}`;
 
                 connection.query(query3, (err, result) => {
                   if (err) {
@@ -567,14 +568,14 @@ exports.saveMovement = function (req, res) {
                     console.log("err: " + err);
                   } else {
                     console.log("result: " + result);
-                    //save movement in detalle_movimientos_articulos
+                    // save movement in detalle_movimientos_articulos
                     let cantidad = 0;
                     if (articulo.entradas > 0) {
                       cantidad = articulo.entradas;
                     } else {
                       cantidad = articulo.salidas;
                     }
-                    var query4 = `INSERT INTO detalle_movimientos_articulos (movimiento_id, id_movimiento, producto_id, cantidad, usuario_id, created_at, updated_at) VALUES ('${tipo_movimiento}', '${idAjuste}', '${articulo.id}', '${cantidad}', '${uid}',  NOW(), NOW())`;
+                    const query4 = `INSERT INTO detalle_movimientos_articulos (movimiento_id, id_movimiento, producto_id, cantidad, usuario_id, created_at, updated_at) VALUES ('${tipo_movimiento}', '${idAjuste}', '${articulo.id}', '${cantidad}', '${uid}',  NOW(), NOW())`;
                     connection.query(query4, (err, result) => {
                       if (err) {
                         error = true;
@@ -614,8 +615,8 @@ exports.saveMovement = function (req, res) {
   }
 };
 
-exports.getAllMovements = function (req, res) {
-  var token = req.headers.token;
+exports.getAllMovements = function(req, res) {
+  const token = req.headers.token;
   if (token === undefined) {
     return res.status(403).json({
       ok: false,
@@ -623,11 +624,11 @@ exports.getAllMovements = function (req, res) {
     });
   } else {
     try {
-      var { uid } = jwt.verify(token, process.env.JWT_SECRET);
+      const { uid } = jwt.verify(token, process.env.JWT_SECRET);
       req.uid = uid;
       console.log("uid: " + uid);
-      var connection = DbConnection.initFunction();
-      var query =
+      const connection = DbConnection.initFunction();
+      let query =
         "SELECT aj.id as id, aj.costo_neto, aj.observaciones, aj.costo_imp, aj.entradas, aj.salidas, aj.created_at, u.name, tm.tipo_movimiento FROM ajustes_de_inventarios aj ";
       query += "INNER JOIN tipo_movimientos tm ";
       query += "ON tipo_movimiento_id = tm.id ";
@@ -661,8 +662,8 @@ exports.getAllMovements = function (req, res) {
   }
 };
 
-exports.getMovementDetails = function (req, res) {
-  var token = req.headers.token;
+exports.getMovementDetails = function(req, res) {
+  const token = req.headers.token;
   if (token === undefined) {
     return res.status(403).json({
       ok: false,
@@ -670,11 +671,11 @@ exports.getMovementDetails = function (req, res) {
     });
   } else {
     try {
-      var { uid } = jwt.verify(token, process.env.JWT_SECRET);
+      const { uid } = jwt.verify(token, process.env.JWT_SECRET);
       req.uid = uid;
       console.log("uid: " + uid);
-      //get id from url
-      var id = req.body.id;
+      // get id from url
+      const id = req.body.id;
 
       if (id == null || id === undefined || id === "") {
         return res.status(401).json({
@@ -682,9 +683,9 @@ exports.getMovementDetails = function (req, res) {
           msg: "El id es requerido",
         });
       } else {
-        //get movement details and articles
-        var connection = DbConnection.initFunction();
-        var query =
+        // get movement details and articles
+        const connection = DbConnection.initFunction();
+        let query =
           "SELECT aj.id as id, aj.costo_neto, aj.observaciones, aj.costo_imp, aj.entradas, aj.salidas, aj.created_at, u.name, tm.tipo_movimiento FROM ajustes_de_inventarios aj ";
         query += "INNER JOIN tipo_movimientos tm ";
         query += "ON tipo_movimiento_id = tm.id ";
@@ -701,8 +702,8 @@ exports.getMovementDetails = function (req, res) {
               err,
             });
           } else {
-            //get articles
-            var query2 = "SELECT * FROM detalle_ajustes_de_inventarios";
+            // get articles
+            let query2 = "SELECT * FROM detalle_ajustes_de_inventarios";
             query2 += " INNER JOIN articulos p ";
             query2 += " ON articulo_id = p.id ";
             query2 +=
@@ -739,13 +740,13 @@ exports.getMovementDetails = function (req, res) {
   }
 };
 
-exports.getResumeInventario = async function (req, res) {
-  var query = `SELECT * FROM articulos`;
-  var connection = DbConnection.initFunction();
-  var productos = [];
-  var items = 0;
-  var costo = 0;
-  var precio = 0;
+exports.getResumeInventario = async function(req, res) {
+  const query = `SELECT * FROM articulos`;
+  const connection = DbConnection.initFunction();
+  let productos = [];
+  let items = 0;
+  let costo = 0;
+  let precio = 0;
   await connection.query(query, (err, result) => {
     connection.end();
     if (err) {

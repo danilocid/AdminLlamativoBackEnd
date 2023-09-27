@@ -1,8 +1,8 @@
-var mysql = require("mysql");
+const mysql = require("mysql");
 require("dotenv").config();
 
-exports.initFunction = function () {
-  var connection = mysql.createConnection({
+exports.initFunction = function() {
+  const connection = mysql.createConnection({
     host: "190.13.188.105",
     port: process.env.DB_PORT,
     user: "orhanoik_sivig_laravel",

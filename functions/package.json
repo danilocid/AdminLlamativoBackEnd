@@ -6,6 +6,7 @@
     "serve": "firebase emulators:start",
     "shell": "firebase functions:shell",
     "dev": "nodemon index.js",
+    "prestart": "eslint . --fix",
     "start": "npm run serve",
     "deploy": "firebase deploy --only functions",
     "logs": "firebase functions:log"

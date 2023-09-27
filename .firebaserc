@@ -1,15 +1,5 @@
 {
   "projects": {
-    "default": "sivig-ae865"
-  },
-  "targets": {
-    "sivig-ae865": {
-      "hosting": {
-        "hosting": [
-          "us-central"
-        ]
-      }
-    }
-  },
-  "etags": {}
+    "default": "llamativo-admin"
+  }
 }

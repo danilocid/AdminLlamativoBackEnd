@@ -1,14 +1,14 @@
 const functions = require("firebase-functions");
-var issues = require("../controller/issuesController");
+const issues = require("../controller/issuesController");
 const cors = require("cors")({
-  origin: "*",
-  origin: "https://localhost:4200",
-  origin: "https://sivig-ae865.web.app",
-  origin: "https://sivig-ae865.firebaseapp.com",
-  origin: "*",
+  origin: [
+    "https://llamativo-admin.web.app",
+    "https://llamativo-admin.firebaseapp.com",
+    "https://localhost:4200",
+  ],
   credentials: true,
 });
-//issues
+// issues
 // all issues with token
 exports.GetAll = functions.https.onRequest((request, response) => {
   cors(request, response, () => {
@@ -43,21 +43,21 @@ exports.GetAllTypes = functions.https.onRequest((request, response) => {
   });
 });
 
-//update issue with token
+// update issue with token
 exports.Update = functions.https.onRequest((request, response) => {
   cors(request, response, () => {
     issues.updateIssue(request, response);
   });
 });
 
-//create issue with token
+// create issue with token
 exports.Create = functions.https.onRequest((request, response) => {
   cors(request, response, () => {
     issues.createIssue(request, response);
   });
 });
 
-//report issue with token
+// report issue with token
 exports.Report = functions.https.onRequest((request, response) => {
   cors(request, response, () => {
     issues.getReport(request, response);
