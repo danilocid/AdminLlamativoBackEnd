@@ -744,9 +744,10 @@ exports.getResumeInventario = async function(req, res) {
   const query = `SELECT * FROM articulos`;
   const connection = DbConnection.initFunction();
   let productos = [];
-  let items = 0;
-  let costo = 0;
-  let precio = 0;
+  let totalUnits = 0;
+  let totalCost = 0;
+  let totalSale = 0;
+  let totalProfit = 0;
   await connection.query(query, (err, result) => {
     connection.end();
     if (err) {
@@ -759,16 +760,25 @@ exports.getResumeInventario = async function(req, res) {
     } else {
       productos = result;
       productos.forEach((producto) => {
-        items += producto.stock;
-        costo += producto.stock * (producto.costo_neto + producto.costo_imp);
-        precio += producto.stock * (producto.venta_neto + producto.venta_imp);
+        totalUnits += producto.stock;
+        totalCost +=
+          producto.stock * (producto.costo_neto + producto.costo_imp);
+        totalSale +=
+          producto.stock * (producto.venta_neto + producto.venta_imp);
+        totalProfit +=
+          producto.stock *
+          (producto.venta_neto +
+            producto.venta_imp -
+            producto.costo_neto -
+            producto.costo_imp);
       });
       return res.status(200).json({
         ok: true,
         msg: "Inventario",
-        items,
-        costo,
-        precio,
+        totalUnits,
+        totalCost,
+        totalSale,
+        totalProfit,
       });
     }
   });
