@@ -19,6 +19,8 @@ module.exports = {
     indent: ["off"],
     "quote-props": ["off"],
     "comma-dangle": ["off"],
+    "space-before-function-parent": ["off"],
+    "space-before-function-paren": ["off"],
   },
   overrides: [
     {
