@@ -2,9 +2,10 @@ const DbConnection = require("../util/dbConnection");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
-exports.getAllClients = (req, res) => {
+exports.getAll = (req, res) => {
   // validate token
   const token = req.headers.token;
+  const type = req.query.t || "a";
   if (token === undefined) {
     return res.status(403).json({
       ok: false,
@@ -14,25 +15,30 @@ exports.getAllClients = (req, res) => {
     try {
       const { uid } = jwt.verify(token, process.env.JWT_SECRET);
       req.uid = uid;
-      console.log("uid: " + uid);
       const connection = DbConnection.initFunction();
       let sql =
-        "SELECT clientes.*, regiones.region, comunas.comuna FROM clientes";
-      sql += " INNER JOIN regiones ON clientes.id_region = regiones.id";
-      sql += " INNER JOIN comunas ON clientes.id_comuna = comunas.id";
+        "SELECT entidades.*, regiones.region, comunas.comuna FROM entidades";
+      sql += " INNER JOIN regiones ON entidades.id_region = regiones.id";
+      sql += " INNER JOIN comunas ON entidades.id_comuna = comunas.id";
+      if (type === "c") {
+        sql += " WHERE entidades.tipo in ('C', 'B')";
+      }
+      if (type === "p") {
+        sql += " WHERE entidades.tipo in ('P', 'B')";
+      }
       connection.query(sql, (err, result) => {
         connection.end();
         if (err) {
           console.log(err);
           return res.status(500).json({
             ok: false,
-            msg: "Error al obtener los clientes",
+            msg: "Error al obtener las entidades",
             err,
           });
         } else {
           return res.status(200).json({
             ok: true,
-            msg: "Clientes obtenidos",
+            msg: "Entidades obtenidos",
             data: result,
           });
         }

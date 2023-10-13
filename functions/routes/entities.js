@@ -1,5 +1,5 @@
 const functions = require("firebase-functions");
-const clients = require("../controller/clientsController");
+const entities = require("../controller/EntitiesController");
 const cors = require("cors")({
   origin: [
     "https://llamativo-admin.web.app",
@@ -10,26 +10,26 @@ const cors = require("cors")({
 });
 
 // get all clients
-exports.getAllClients = functions.https.onRequest((req, res) => {
+exports.GetAll = functions.https.onRequest((req, res) => {
   cors(req, res, () => {
-    clients.getAllClients(req, res);
+    entities.getAll(req, res);
   });
 });
 // get client by rut
 exports.getClientByRut = functions.https.onRequest((req, res) => {
   cors(req, res, () => {
-    clients.getClientByRut(req, res);
+    entities.getClientByRut(req, res);
   });
 });
 // add client
 exports.addClient = functions.https.onRequest((req, res) => {
   cors(req, res, () => {
-    clients.createClient(req, res);
+    entities.createClient(req, res);
   });
 });
 // update client
 exports.updateClient = functions.https.onRequest((req, res) => {
   cors(req, res, () => {
-    clients.updateClient(req, res);
+    entities.updateClient(req, res);
   });
 });
