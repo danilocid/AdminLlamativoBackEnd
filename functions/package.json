@@ -19,16 +19,16 @@
     "async": "^3.2.4",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
-    "dotenv": "^16.0.3",
-    "firebase-admin": "^11.7.0",
-    "firebase-functions": "^4.3.1",
-    "jsonwebtoken": "^9.0.0",
+    "dotenv": "^16.3.1",
+    "firebase-admin": "^11.11.0",
+    "firebase-functions": "^4.4.1",
+    "jsonwebtoken": "^9.0.2",
     "mysql": "^2.18.1"
   },
   "devDependencies": {
-    "eslint": "^8.9.0",
+    "eslint": "^8.51.0",
     "eslint-config-google": "^0.14.0",
-    "firebase-functions-test": "^0.2.0"
+    "firebase-functions-test": "^0.2.3"
   },
   "private": true
 }

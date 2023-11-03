@@ -16,20 +16,20 @@ exports.GetAll = functions.https.onRequest((req, res) => {
   });
 });
 // get client by rut
-exports.getClientByRut = functions.https.onRequest((req, res) => {
+exports.GetEntityByRut = functions.https.onRequest((req, res) => {
   cors(req, res, () => {
-    entities.getClientByRut(req, res);
+    entities.GetEntityByRut(req, res);
   });
 });
 // add client
-exports.addClient = functions.https.onRequest((req, res) => {
+exports.Create = functions.https.onRequest((req, res) => {
   cors(req, res, () => {
-    entities.createClient(req, res);
+    entities.Create(req, res);
   });
 });
 // update client
-exports.updateClient = functions.https.onRequest((req, res) => {
+exports.Update = functions.https.onRequest((req, res) => {
   cors(req, res, () => {
-    entities.updateClient(req, res);
+    entities.updateEntity(req, res);
   });
 });

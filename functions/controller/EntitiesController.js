@@ -53,7 +53,7 @@ exports.getAll = (req, res) => {
   }
 };
 
-exports.getClientByRut = (req, res) => {
+exports.GetEntityByRut = (req, res) => {
   // validate token
   const token = req.headers.token;
   if (token === undefined) {
@@ -73,12 +73,11 @@ exports.getClientByRut = (req, res) => {
         const { uid } = jwt.verify(token, process.env.JWT_SECRET);
         const rut = req.body.rut;
         req.uid = uid;
-        console.log("uid: " + uid);
         const connection = DbConnection.initFunction();
         let sql =
-          "SELECT clientes.*, regiones.region, comunas.comuna FROM clientes";
-        sql += " INNER JOIN regiones ON regiones.id = clientes.id_region";
-        sql += " INNER JOIN comunas ON clientes.id_comuna = comunas.id";
+          "SELECT entidades.*, regiones.region, comunas.comuna FROM entidades";
+        sql += " INNER JOIN regiones ON regiones.id = entidades.id_region";
+        sql += " INNER JOIN comunas ON entidades.id_comuna = comunas.id";
         sql += " WHERE rut = ?";
 
         connection.query(sql, [rut], (err, result) => {
@@ -94,7 +93,7 @@ exports.getClientByRut = (req, res) => {
             return res.status(200).json({
               ok: true,
               msg: "Clientes obtenidos",
-              data: result,
+              data: result[0],
             });
           }
         });
@@ -109,7 +108,7 @@ exports.getClientByRut = (req, res) => {
   }
 };
 
-exports.createClient = (req, res) => {
+exports.Create = (req, res) => {
   // validate token
   const token = req.headers.token;
   if (token === undefined) {
@@ -164,7 +163,7 @@ exports.createClient = (req, res) => {
         req.uid = uid;
         console.log("uid: " + uid);
         const connection = DbConnection.initFunction();
-        const sql = "INSERT INTO clientes SET ?";
+        const sql = "INSERT INTO entidades SET ?";
         const data = {
           rut: req.body.rut,
           nombre: req.body.nombre,
@@ -174,6 +173,7 @@ exports.createClient = (req, res) => {
           id_comuna: req.body.comuna,
           telefono: req.body.telefono,
           mail: req.body.mail,
+          tipo: req.body.tipo,
         };
         connection.query(sql, [data], (err, result) => {
           connection.end();
@@ -211,7 +211,7 @@ exports.createClient = (req, res) => {
   }
 };
 
-exports.updateClient = (req, res) => {
+exports.updateEntity = (req, res) => {
   // validate token
   const token = req.headers.token;
   if (token === undefined) {
@@ -266,7 +266,7 @@ exports.updateClient = (req, res) => {
         req.uid = uid;
         console.log("uid: " + uid);
         const connection = DbConnection.initFunction();
-        const sql = "UPDATE clientes SET ? WHERE rut = ?";
+        const sql = "UPDATE entidades SET ? WHERE rut = ?";
         const data = {
           nombre: req.body.nombre,
           giro: req.body.giro,
@@ -275,6 +275,7 @@ exports.updateClient = (req, res) => {
           id_comuna: req.body.comuna,
           telefono: req.body.telefono,
           mail: req.body.mail,
+          tipo: req.body.tipo,
         };
         connection.query(sql, [data, req.body.rut], (err, result) => {
           connection.end();
@@ -283,13 +284,13 @@ exports.updateClient = (req, res) => {
             console.log(err);
             return res.status(500).json({
               ok: false,
-              msg: "Error al actualizar cliente",
+              msg: "Error al actualizar entidad",
               err: err,
             });
           } else {
             return res.status(200).json({
               ok: true,
-              msg: "Cliente actualizado",
+              msg: "Entidad actualizada",
               data: result,
             });
           }

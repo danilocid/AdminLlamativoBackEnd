@@ -1,7 +1,7 @@
 const DbConnection = require("../util/dbConnection");
 const jwt = require("jsonwebtoken");
 
-exports.getAllIssues = function(req, res) {
+exports.getAllIssues = function (req, res) {
   // validate token
   const token = req.headers.token;
   if (token === undefined) {
@@ -13,9 +13,14 @@ exports.getAllIssues = function(req, res) {
     try {
       const { uid } = jwt.verify(token, process.env.JWT_SECRET);
       console.log("uid: " + uid);
-
+      const status = req.body.status;
+      console.log("status: " + status);
       const connection = DbConnection.initFunction();
-      const query = `SELECT issues.*, issue_types.issue_type as Tipo, issue_statuses.name AS Status, issue_sections.name AS Seccion FROM issues INNER JOIN issue_types ON issues.id_type = issue_types.id INNER JOIN issue_statuses ON issues.id_status = issue_statuses.id INNER JOIN issue_sections ON issues.id_section = issue_sections.id; `;
+      let query = `SELECT issues.*, issue_types.issue_type as Tipo, issue_statuses.name AS Status, issue_sections.name AS Seccion FROM issues INNER JOIN issue_types ON issues.id_type = issue_types.id INNER JOIN issue_statuses ON issues.id_status = issue_statuses.id INNER JOIN issue_sections ON issues.id_section = issue_sections.id `;
+      if (status == "pending") {
+        query = query + " WHERE issues.id_status != 3";
+      }
+
       connection.query(query, (err, result) => {
         connection.end();
         if (err) {
@@ -47,7 +52,7 @@ exports.getAllIssues = function(req, res) {
   }
 };
 
-exports.getIssueById = function(req, res) {
+exports.getIssueById = function (req, res) {
   // validate token
   const token = req.headers.token;
   if (token === undefined) {
@@ -93,7 +98,7 @@ exports.getIssueById = function(req, res) {
   }
 };
 
-exports.getAllStatus = function(req, res) {
+exports.getAllStatus = function (req, res) {
   const token = req.headers.token;
   if (token === undefined) {
     return res.status(403).json({
@@ -138,7 +143,7 @@ exports.getAllStatus = function(req, res) {
   }
 };
 
-exports.getAllSections = function(req, res) {
+exports.getAllSections = function (req, res) {
   const token = req.headers.token;
   if (token === undefined) {
     return res.status(403).json({
@@ -183,7 +188,7 @@ exports.getAllSections = function(req, res) {
   }
 };
 
-exports.getAllTypes = function(req, res) {
+exports.getAllTypes = function (req, res) {
   const token = req.headers.token;
   if (token === undefined) {
     return res.status(403).json({
@@ -194,7 +199,6 @@ exports.getAllTypes = function(req, res) {
     try {
       const { uid } = jwt.verify(token, process.env.JWT_SECRET);
       console.log("uid: " + uid);
-
       const connection = DbConnection.initFunction();
       const query = `SELECT * FROM issue_types;`;
       connection.query(query, (err, result) => {
@@ -228,7 +232,7 @@ exports.getAllTypes = function(req, res) {
   }
 };
 
-exports.updateIssue = function(req, res) {
+exports.updateIssue = function (req, res) {
   // validate token
   const token = req.headers.token;
   if (token === undefined) {
@@ -272,7 +276,7 @@ exports.updateIssue = function(req, res) {
   }
 };
 
-exports.createIssue = function(req, res) {
+exports.createIssue = function (req, res) {
   // validate token
   const token = req.headers.token;
   if (token === undefined) {
@@ -315,7 +319,7 @@ exports.createIssue = function(req, res) {
   }
 };
 
-exports.getReport = function(req, res) {
+exports.getReport = function (req, res) {
   // validate token
   const token = req.headers.token;
   if (token === undefined) {

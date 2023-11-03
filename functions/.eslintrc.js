@@ -21,6 +21,7 @@ module.exports = {
     "comma-dangle": ["off"],
     "space-before-function-parent": ["off"],
     "space-before-function-paren": ["off"],
+    "new-cap": ["off"],
   },
   overrides: [
     {
