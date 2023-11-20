@@ -14,34 +14,34 @@ exports.getAllProducts = function (req, res, conStock = false, activo = true) {
     try {
       const { uid } = jwt.verify(token, process.env.JWT_SECRET);
       req.uid = uid;
-      //console.log(req.query);
+      //  console.log(req.query);
       activo = req.query.active;
       // console.log("activo: " + activo);
       if (activo === undefined || activo === null || activo === "") {
         activo = true;
       }
-      //console.log("activo: " + activo);
+      //  console.log("activo: " + activo);
       conStock = req.query.stock;
-      //console.log("conStock: " + conStock);
+      //  console.log("conStock: " + conStock);
       if (conStock === undefined || conStock === null || conStock === "") {
         conStock = false;
       }
-      //console.log("conStock: " + conStock);
-      //console.log("uid: " + uid);
+      //  console.log("conStock: " + conStock);
+      //  console.log("uid: " + uid);
       const connection = DbConnection.initFunction();
       let query = `SELECT * FROM articulos`;
       if (!conStock || conStock === "false") {
-        //console.log("no con stock");
+        //  console.log("no con stock");
 
         if (activo === "true") {
-          //console.log("activo");
+          //  console.log("activo");
           query += ` WHERE activo = 1`;
         }
       } else {
-        //console.log("con stock");
+        //  console.log("con stock");
         query = `SELECT * FROM articulos WHERE stock > 0`;
         if (activo === "true") {
-          //console.log("activo");
+          //  console.log("activo");
           query += ` AND activo = 1`;
         }
       }
