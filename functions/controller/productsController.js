@@ -2,7 +2,7 @@ const DbConnection = require("../util/dbConnection");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
-exports.getAllProducts = function(req, res, conStock = false, activo = true) {
+exports.getAllProducts = function (req, res, conStock = false, activo = true) {
   // validate token
   const token = req.headers.token;
   if (token === undefined) {
@@ -14,34 +14,34 @@ exports.getAllProducts = function(req, res, conStock = false, activo = true) {
     try {
       const { uid } = jwt.verify(token, process.env.JWT_SECRET);
       req.uid = uid;
-      console.log(req.query);
+      //console.log(req.query);
       activo = req.query.active;
-      console.log("activo: " + activo);
+      // console.log("activo: " + activo);
       if (activo === undefined || activo === null || activo === "") {
         activo = true;
       }
-      console.log("activo: " + activo);
+      //console.log("activo: " + activo);
       conStock = req.query.stock;
-      console.log("conStock: " + conStock);
+      //console.log("conStock: " + conStock);
       if (conStock === undefined || conStock === null || conStock === "") {
         conStock = false;
       }
-      console.log("conStock: " + conStock);
-      console.log("uid: " + uid);
+      //console.log("conStock: " + conStock);
+      //console.log("uid: " + uid);
       const connection = DbConnection.initFunction();
       let query = `SELECT * FROM articulos`;
       if (!conStock || conStock === "false") {
-        console.log("no con stock");
+        //console.log("no con stock");
 
         if (activo === "true") {
-          console.log("activo");
+          //console.log("activo");
           query += ` WHERE activo = 1`;
         }
       } else {
-        console.log("con stock");
+        //console.log("con stock");
         query = `SELECT * FROM articulos WHERE stock > 0`;
         if (activo === "true") {
-          console.log("activo");
+          //console.log("activo");
           query += ` AND activo = 1`;
         }
       }
@@ -77,7 +77,7 @@ exports.getAllProducts = function(req, res, conStock = false, activo = true) {
   }
 };
 
-exports.getProduct = function(req, res) {
+exports.getProduct = function (req, res) {
   // validate token
   const token = req.headers.token;
   const id = req.body.id;
@@ -129,7 +129,7 @@ exports.getProduct = function(req, res) {
   }
 };
 
-exports.getProductWithMovements = function(req, res) {
+exports.getProductWithMovements = function (req, res) {
   // validate token
   const token = req.headers.token;
   const id = req.body.id;
@@ -199,7 +199,7 @@ exports.getProductWithMovements = function(req, res) {
   }
 };
 
-exports.updateProduct = function(req, res) {
+exports.updateProduct = function (req, res) {
   // validate token
   const token = req.headers.token;
   const id = req.body.id;
@@ -290,7 +290,7 @@ exports.updateProduct = function(req, res) {
   }
 };
 
-exports.createProduct = function(req, res) {
+exports.createProduct = function (req, res) {
   // validate token
   const token = req.headers.token;
   const cod_interno = req.body.cod_interno;
@@ -385,7 +385,7 @@ exports.createProduct = function(req, res) {
   }
 };
 
-exports.getLastCountedProducts = function(req, res) {
+exports.getLastCountedProducts = function (req, res) {
   // validate token
   const token = req.headers.token;
   if (token === undefined) {
@@ -431,7 +431,7 @@ exports.getLastCountedProducts = function(req, res) {
   }
 };
 
-exports.getAllMovementsTypes = function(req, res) {
+exports.getAllMovementsTypes = function (req, res) {
   const token = req.headers.token;
   if (token === undefined) {
     return res.status(403).json({
@@ -476,7 +476,7 @@ exports.getAllMovementsTypes = function(req, res) {
   }
 };
 
-exports.saveMovement = function(req, res) {
+exports.saveMovement = function (req, res) {
   // validate token
   const token = req.headers.token;
   if (token === undefined) {
@@ -615,7 +615,7 @@ exports.saveMovement = function(req, res) {
   }
 };
 
-exports.getAllMovements = function(req, res) {
+exports.getAllMovements = function (req, res) {
   const token = req.headers.token;
   if (token === undefined) {
     return res.status(403).json({
@@ -662,7 +662,7 @@ exports.getAllMovements = function(req, res) {
   }
 };
 
-exports.getMovementDetails = function(req, res) {
+exports.getMovementDetails = function (req, res) {
   const token = req.headers.token;
   if (token === undefined) {
     return res.status(403).json({
@@ -740,46 +740,64 @@ exports.getMovementDetails = function(req, res) {
   }
 };
 
-exports.getResumeInventario = async function(req, res) {
-  const query = `SELECT * FROM articulos`;
-  const connection = DbConnection.initFunction();
-  let productos = [];
-  let totalUnits = 0;
-  let totalCost = 0;
-  let totalSale = 0;
-  let totalProfit = 0;
-  await connection.query(query, (err, result) => {
-    connection.end();
-    if (err) {
-      console.log(err);
-      return res.status(500).json({
+exports.getResumeInventario = async function (req, res) {
+  const token = req.headers.token;
+  if (token === undefined) {
+    return res.status(403).json({
+      ok: false,
+      msg: "No hay token",
+    });
+  } else {
+    try {
+      const { uid } = jwt.verify(token, process.env.JWT_SECRET);
+      req.uid = uid;
+      const query = `SELECT * FROM articulos`;
+      const connection = DbConnection.initFunction();
+      let productos = [];
+      let totalUnits = 0;
+      let totalCost = 0;
+      let totalSale = 0;
+      let totalProfit = 0;
+      await connection.query(query, (err, result) => {
+        connection.end();
+        if (err) {
+          console.log(err);
+          return res.status(500).json({
+            ok: false,
+            msg: "Error al consultar la base de datos",
+            err,
+          });
+        } else {
+          productos = result;
+          productos.forEach((producto) => {
+            totalUnits += producto.stock;
+            totalCost +=
+              producto.stock * (producto.costo_neto + producto.costo_imp);
+            totalSale +=
+              producto.stock * (producto.venta_neto + producto.venta_imp);
+            totalProfit +=
+              producto.stock *
+              (producto.venta_neto +
+                producto.venta_imp -
+                producto.costo_neto -
+                producto.costo_imp);
+          });
+          return res.status(200).json({
+            ok: true,
+            msg: "Inventario",
+            totalUnits,
+            totalCost,
+            totalSale,
+            totalProfit,
+          });
+        }
+      });
+    } catch (error) {
+      console.log(error);
+      return res.status(403).json({
         ok: false,
-        msg: "Error al consultar la base de datos",
-        err,
-      });
-    } else {
-      productos = result;
-      productos.forEach((producto) => {
-        totalUnits += producto.stock;
-        totalCost +=
-          producto.stock * (producto.costo_neto + producto.costo_imp);
-        totalSale +=
-          producto.stock * (producto.venta_neto + producto.venta_imp);
-        totalProfit +=
-          producto.stock *
-          (producto.venta_neto +
-            producto.venta_imp -
-            producto.costo_neto -
-            producto.costo_imp);
-      });
-      return res.status(200).json({
-        ok: true,
-        msg: "Inventario",
-        totalUnits,
-        totalCost,
-        totalSale,
-        totalProfit,
+        msg: "Token no valido",
       });
     }
-  });
+  }
 };

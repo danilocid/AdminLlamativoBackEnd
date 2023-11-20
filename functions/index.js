@@ -12,3 +12,5 @@ exports.utils = require("./routes/utils");
 exports.entities = require("./routes/entities");
 // sales
 exports.sales = require("./routes/sales");
+// recepciones
+exports.recepciones = require("./routes/recepciones");

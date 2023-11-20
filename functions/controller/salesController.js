@@ -180,7 +180,7 @@ exports.getSaleById = (req, res) => {
       query += "INNER JOIN tipo_documento td ";
       query += "INNER JOIN medios_de_pago md ";
       query +=
-        "INNER JOIN clientes c WHERE tipo_documento = td.id AND medio_pago = md.id AND cliente = c.rut and v.id = " +
+        "INNER JOIN entidades c WHERE tipo_documento = td.id AND medio_pago = md.id AND cliente = c.rut and v.id = " +
         id;
       console.log(query);
       connection.query(query, (err, result) => {
