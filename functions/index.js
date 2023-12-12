@@ -14,3 +14,5 @@ exports.entities = require("./routes/entities");
 exports.sales = require("./routes/sales");
 // recepciones
 exports.recepciones = require("./routes/recepciones");
+// compras
+exports.compras = require("./routes/compras");
