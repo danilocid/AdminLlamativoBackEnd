@@ -74,8 +74,10 @@ exports.getAllFromApi = async (req, res) => {
               // if not, create entity
               if (entidades.length === 0) {
                 responseData.compras.detalleCompras.forEach(async (compra) => {
-                  queryCreateEntity += `('${compra.rutProveedor}', '${compra.razonSocial}', 'Sin giro', 'P', 'Sin dirección', 204, 10, 94679847, 'cidybadilla@gmail.com'),`;
-                  createEntity = true;
+                  if (!queryCreateEntity.contains(compra.rutProveedor)) {
+                    queryCreateEntity += `('${compra.rutProveedor}', '${compra.razonSocial}', 'Sin giro', 'P', 'Sin dirección', 204, 10, 94679847, 'cidybadilla@gmail.com'),`;
+                    createEntity = true;
+                  }
                 });
                 queryCreateEntity = queryCreateEntity.slice(0, -1);
               } else {
@@ -390,8 +392,10 @@ exports.importCompras = async (req, res) => {
           // if not, create entity
           if (entidades.length === 0) {
             comprasFixed.forEach(async (compra) => {
-              queryCreateEntity += `('${compra.rutProveedor}', '${compra.razonSocial}', 'Sin giro', 'P', 'Sin dirección', 204, 10, 94679847, 'cidybadilla@gmail.com'),`;
-              createEntity = true;
+              if (!queryCreateEntity.includes(compra.rutProveedor)) {
+                queryCreateEntity += `('${compra.rutProveedor}', '${compra.razonSocial}', 'Sin giro', 'P', 'Sin dirección', 204, 10, 94679847, 'cidybadilla@gmail.com'),`;
+                createEntity = true;
+              }
             });
             queryCreateEntity = queryCreateEntity.slice(0, -1);
           } else {
