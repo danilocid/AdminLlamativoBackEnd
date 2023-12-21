@@ -12,11 +12,9 @@ exports.getAllFromApi = async (req, res) => {
       msg: "No hay token",
     });
   } else {
-    console.log("token: " + token);
     try {
       const { uid } = jwt.verify(token, process.env.JWT_SECRET);
-      console.log("uid: " + uid);
-      // req.uid = uid;
+      req.uid = uid;
       let responseData;
       // get month and year
       const month = req.body.month;
@@ -28,7 +26,7 @@ exports.getAllFromApi = async (req, res) => {
         .get(url, {
           auth: {
             username: process.env.SIMPLE_API_USER,
-            password: process.env.SIMPLE_API_PASS,
+            password: process.env.SIMPLE_API_PASS_2,
           },
           data: {
             RutUsuario: process.env.SIMPLE_API_RUT_USUARIO,
@@ -38,115 +36,101 @@ exports.getAllFromApi = async (req, res) => {
             Detallado: true,
           },
         })
-        .then((response) => {
-          console.log(response.data);
+        .then(async (response) => {
           responseData = response.data;
-        })
-        .catch((error) => {
-          console.log("status:" + error.response.status);
-          console.log("statusText:" + error.response.statusText);
-          console.log("data:" + error.response.data);
-          return res.status(500).json({
-            ok: false,
-            msg: "Error al obtener compras",
-            data: error.response.data,
-          });
-        })
-        .finally(() => {
-          console.log("finally");
-        });
 
-      // console.log(responseData.compras.detalleCompras);
-      let queryEntities = `SELECT * FROM entidades WHERE rut in (`;
-      const proveedoresFromApi = [];
-      console.log(responseData.compras.detalleCompras.length);
-      if (responseData.compras.detalleCompras.length === 0) {
-        return res.status(200).json({
-          ok: true,
-          msg: "Sin compras para ingresar",
-        });
-      }
-      await responseData.compras.detalleCompras.forEach((compra) => {
-        // console.log(compra.rutProveedor);
-        // if rutProveedor not in proveedoresFromApi, add it
-        if (!proveedoresFromApi.includes(compra.rutProveedor)) {
-          console.log("no existe " + compra.rutProveedor);
-          proveedoresFromApi.push(compra.rutProveedor);
-          queryEntities += `'${compra.rutProveedor}',`;
-        }
-      });
-      queryEntities = queryEntities.slice(0, -1);
-      queryEntities += `)`;
-      // console.log(queryEntities);
-      // check if entity exists
-      let entidades = [];
-      const connection = DbConnection.initFunction();
-      await connection.query(queryEntities, async (err, result) => {
-        if (err) {
-          console.log(err);
-          return res.status(500).json({
-            ok: false,
-            msg: "Error al obtener las entidades",
-            err,
-          });
-        } else {
-          // console.log(result);
-          entidades = result;
-          let createEntity = false;
-          let queryCreateEntity = `INSERT INTO entidades (rut, nombre, giro, tipo, direccion, id_comuna, id_region, telefono, mail) VALUES `;
-          // if not, create entity
-          if (entidades.length === 0) {
-            console.log("no hay entidades");
-
-            responseData.compras.detalleCompras.forEach(async (compra) => {
-              queryCreateEntity += `('${compra.rutProveedor}', '${compra.razonSocial}', 'Sin giro', 'P', 'Sin dirección', 204, 10, 94679847, 'cidybadilla@gmail.com'),`;
-              createEntity = true;
+          let queryEntities = `SELECT * FROM entidades WHERE rut in (`;
+          const proveedoresFromApi = [];
+          if (responseData.compras.detalleCompras.length === 0) {
+            return res.status(200).json({
+              ok: true,
+              msg: "Sin compras para ingresar",
             });
-            queryCreateEntity = queryCreateEntity.slice(0, -1);
-
-            // console.log(queryCreateEntity);
-          } else {
-            // console.log("hay entidades");
-            // check if entityFrom Api exists in db
-
-            responseData.compras.detalleCompras.forEach(async (compra) => {
-              const entityFromApi = entidades.find(
-                (entity) => entity.rut === compra.rutProveedor
-              );
-              if (entityFromApi === undefined) {
-                console.log("no hay entidad");
-                // if queryCreateEntity has the entity, don't add it
-                if (!queryCreateEntity.includes(compra.rutProveedor)) {
-                  queryCreateEntity += `('${compra.rutProveedor}', '${compra.razonSocial}', 'Sin giro', 'P', 'Sin dirección', 204, 10, 94679847, 'cidybadilla@gmail.com'),`;
-                  createEntity = true;
-                } else {
-                  console.log("ya existe " + compra.rutProveedor);
-                }
-              }
-            });
-            queryCreateEntity = queryCreateEntity.slice(0, -1);
-            // console.log(queryCreateEntity);
-            // create entities
-            if (createEntity) {
-              await connection.query(queryCreateEntity, (err, result) => {
-                if (err) {
-                  console.log(err);
-                  return res.status(500).json({
-                    ok: false,
-                    msg: "Error al crear las entidades",
-                    err,
-                  });
-                } else {
-                  // console.log(result);
-                  this.insertCompras(req, res, responseData);
-                }
+          }
+          await responseData.compras.detalleCompras.forEach((compra) => {
+            // if rutProveedor not in proveedoresFromApi, add it
+            if (!proveedoresFromApi.includes(compra.rutProveedor)) {
+              proveedoresFromApi.push(compra.rutProveedor);
+              queryEntities += `'${compra.rutProveedor}',`;
+            }
+          });
+          queryEntities = queryEntities.slice(0, -1);
+          queryEntities += `)`;
+          // check if entity exists
+          let entidades = [];
+          const connection = DbConnection.initFunction();
+          await connection.query(queryEntities, async (err, result) => {
+            if (err) {
+              console.log(err);
+              return res.status(500).json({
+                ok: false,
+                msg: "Error al obtener las entidades",
+                err,
               });
             } else {
-              this.insertCompras(req, res, responseData);
+              entidades = result;
+              let createEntity = false;
+              let queryCreateEntity = `INSERT INTO entidades (rut, nombre, giro, tipo, direccion, id_comuna, id_region, telefono, mail) VALUES `;
+              // if not, create entity
+              if (entidades.length === 0) {
+                responseData.compras.detalleCompras.forEach(async (compra) => {
+                  queryCreateEntity += `('${compra.rutProveedor}', '${compra.razonSocial}', 'Sin giro', 'P', 'Sin dirección', 204, 10, 94679847, 'cidybadilla@gmail.com'),`;
+                  createEntity = true;
+                });
+                queryCreateEntity = queryCreateEntity.slice(0, -1);
+              } else {
+                // check if entityFrom Api exists in db
+
+                responseData.compras.detalleCompras.forEach(async (compra) => {
+                  const entityFromApi = entidades.find(
+                    (entity) => entity.rut === compra.rutProveedor
+                  );
+                  if (entityFromApi === undefined) {
+                    // if queryCreateEntity has the entity, don't add it
+                    if (!queryCreateEntity.includes(compra.rutProveedor)) {
+                      queryCreateEntity += `('${compra.rutProveedor}', '${compra.razonSocial}', 'Sin giro', 'P', 'Sin dirección', 204, 10, 94679847, 'cidybadilla@gmail.com'),`;
+                      createEntity = true;
+                    }
+                  }
+                });
+                queryCreateEntity = queryCreateEntity.slice(0, -1);
+              }
+              // create entities
+              if (createEntity) {
+                await connection.query(queryCreateEntity, (err, result) => {
+                  if (err) {
+                    console.log(err);
+                    return res.status(500).json({
+                      ok: false,
+                      msg: "Error al crear las entidades",
+                      err,
+                    });
+                  } else {
+                    this.insertCompras(req, res, responseData);
+                  }
+                });
+              } else {
+                this.insertCompras(req, res, responseData);
+              }
             }
+          });
+        })
+        .catch((error) => {
+          console.log(error);
+          if (error.response.data === "Límite de consultas alcanzado") {
+            return res.status(401).json({
+              ok: false,
+              msg: "Límite de consultas alcanzado",
+            });
+          } else {
+            return res.status(500).json({
+              ok: false,
+              msg: "Error al obtener compras",
+              data: error.response.data,
+            });
           }
-        }
-      });
+        })
+        .finally(() => {});
     } catch (error) {
       console.log(error);
       return res.status(403).json({
@@ -158,7 +142,6 @@ exports.getAllFromApi = async (req, res) => {
 };
 
 exports.insertCompras = async (req, res, responseData) => {
-  // console.log("insert compras");
   // select compras from db, where rut = rutEmpresa and documento = folio
   let ruts = "";
   let folios = "";
@@ -168,10 +151,7 @@ exports.insertCompras = async (req, res, responseData) => {
   });
   ruts = ruts.slice(0, -1);
   folios = folios.slice(0, -1);
-  // console.log(ruts);
-  // console.log(folios);
   const queryCompras = `SELECT * FROM compras WHERE proveedor in (${ruts}) AND documento in (${folios})`;
-  // console.log(queryCompras);
   const connection = DbConnection.initFunction();
   await connection.query(queryCompras, async (err, result) => {
     if (err) {
@@ -182,7 +162,6 @@ exports.insertCompras = async (req, res, responseData) => {
         err,
       });
     } else {
-      //  console.log(result);
       let createCompra = false;
       let queryCreateCompra = `INSERT INTO compras (proveedor, tipo_documento, documento, fecha_documento, monto_neto_documento, monto_imp_documento, costo_neto_documento, costo_imp_documento, tipo_compra, observaciones) VALUES `;
 
@@ -194,12 +173,6 @@ exports.insertCompras = async (req, res, responseData) => {
             compraApi.folio === compra.documento
         );
         if (compraFromApi !== undefined) {
-          console.log(
-            "existe: " +
-              compraFromApi.rutProveedor +
-              " - " +
-              compraFromApi.folio
-          );
           responseData.compras.detalleCompras.splice(
             responseData.compras.detalleCompras.indexOf(compraFromApi),
             1
@@ -212,7 +185,6 @@ exports.insertCompras = async (req, res, responseData) => {
         queryCreateCompra += `('${compra.rutProveedor}', '${compra.tipoDTE}', '${compra.folio}', '${compra.fechaEmision}', '${compra.montoNeto}', '${compra.montoIvaRecuperable}', '${compra.montoNeto}', '${compra.montoIvaRecuperable}', 1, 'Pendiente'),`;
       });
       queryCreateCompra = queryCreateCompra.slice(0, -1);
-      // console.log(queryCreateCompra);
       if (createCompra) {
         await connection.query(queryCreateCompra, (err, result) => {
           if (err) {
@@ -223,7 +195,6 @@ exports.insertCompras = async (req, res, responseData) => {
               err,
             });
           } else {
-            // console.log(result);
             return res.status(200).json({
               ok: true,
               msg:
@@ -263,7 +234,6 @@ exports.getAll = async (req, res) => {
         err,
       });
     } else {
-      // console.log(result);
       return res.status(200).json({
         ok: true,
         msg: "Compras obtenidas",
@@ -296,7 +266,6 @@ exports.getAllComprasType = async (req, res) => {
             err,
           });
         } else {
-          // console.log(result);
           return res.status(200).json({
             ok: true,
             msg: "Tipos de compra obtenidos",
@@ -343,7 +312,6 @@ exports.updateCompra = async (req, res) => {
             err,
           });
         } else {
-          // console.log(result);
           return res.status(200).json({
             ok: true,
             msg: "Compra actualizada",
@@ -358,4 +326,189 @@ exports.updateCompra = async (req, res) => {
       });
     }
   }
+};
+
+exports.importCompras = async (req, res) => {
+  // validate token
+  const token = req.headers.token;
+  if (token === undefined) {
+    return res.status(403).json({
+      ok: false,
+      msg: "No hay token",
+    });
+  } else {
+    try {
+      const { uid } = jwt.verify(token, process.env.JWT_SECRET);
+      req.uid = uid;
+      const compras = req.body.data;
+      const connection = DbConnection.initFunction();
+
+      let queryEntities = `SELECT * FROM entidades WHERE rut in (`;
+      const proveedoresFromApi = [];
+      if (compras === 0) {
+        return res.status(200).json({
+          ok: true,
+          msg: "Sin compras para ingresar",
+        });
+      }
+      const comprasFixed = [];
+      compras.forEach((compra) => {
+        const compraFixed = {
+          rutProveedor: compra["RUT Proveedor"],
+          razonSocial: compra["Razon Social"],
+          tipoDTE: +compra["Tipo Doc"],
+          folio: +compra.Folio,
+          fechaEmision: compra["Fecha Docto"],
+          montoNeto: +compra["Monto Neto"],
+          montoImp: compra["Monto IVA Recuperable"],
+        };
+        comprasFixed.push(compraFixed);
+      });
+      await comprasFixed.forEach((compra) => {
+        // if rutProveedor not in proveedoresFromApi, add it
+        if (!proveedoresFromApi.includes(compra.rutProveedor)) {
+          proveedoresFromApi.push(compra.rutProveedor);
+          queryEntities += `'${compra.rutProveedor}',`;
+        }
+      });
+      queryEntities = queryEntities.slice(0, -1);
+      queryEntities += `)`;
+      // check if entity exists
+      let entidades = [];
+      await connection.query(queryEntities, async (err, result) => {
+        if (err) {
+          console.log(err);
+          return res.status(500).json({
+            ok: false,
+            msg: "Error al obtener las entidades",
+            err,
+          });
+        } else {
+          entidades = result;
+          let createEntity = false;
+          let queryCreateEntity = `INSERT INTO entidades (rut, nombre, giro, tipo, direccion, id_comuna, id_region, telefono, mail) VALUES `;
+          // if not, create entity
+          if (entidades.length === 0) {
+            comprasFixed.forEach(async (compra) => {
+              queryCreateEntity += `('${compra.rutProveedor}', '${compra.razonSocial}', 'Sin giro', 'P', 'Sin dirección', 204, 10, 94679847, 'cidybadilla@gmail.com'),`;
+              createEntity = true;
+            });
+            queryCreateEntity = queryCreateEntity.slice(0, -1);
+          } else {
+            // check if entityFrom Api exists in db
+
+            comprasFixed.forEach(async (compra) => {
+              const entityFromApi = entidades.find(
+                (entity) => entity.rut === compra.rutProveedor
+              );
+              if (entityFromApi === undefined) {
+                // if queryCreateEntity has the entity, don't add it
+                if (!queryCreateEntity.includes(compra.rutProveedor)) {
+                  queryCreateEntity += `('${compra.rutProveedor}', '${compra.razonSocial}', 'Sin giro', 'P', 'Sin dirección', 204, 10, 94679847, , 'cidybadilla@gmail.com'),`;
+                  createEntity = true;
+                }
+              }
+            });
+            queryCreateEntity = queryCreateEntity.slice(0, -1);
+          }
+          // create entities
+          if (createEntity) {
+            await connection.query(queryCreateEntity, (err, result) => {
+              if (err) {
+                console.log(err);
+                return res.status(500).json({
+                  ok: false,
+                  msg: "Error al crear las entidades",
+                  err,
+                });
+              } else {
+                this.insertComprasImport(req, res, comprasFixed);
+              }
+            });
+          } else {
+            this.insertComprasImport(req, res, comprasFixed);
+          }
+        }
+      });
+    } catch (error) {
+      console.log(error);
+      return res.status(403).json({
+        ok: false,
+        msg: "Token no válido",
+      });
+    }
+  }
+};
+
+exports.insertComprasImport = async (req, res, compras) => {
+  // select compras from db, where rut = rutEmpresa and documento = folio
+  let ruts = "";
+  let folios = "";
+  compras.forEach((compra) => {
+    ruts += `'${compra.rutProveedor}',`;
+    folios += `${compra.folio},`;
+  });
+  ruts = ruts.slice(0, -1);
+  folios = folios.slice(0, -1);
+  const queryCompras = `SELECT * FROM compras WHERE proveedor in (${ruts}) AND documento in (${folios})`;
+  const connection = DbConnection.initFunction();
+  await connection.query(queryCompras, async (err, result) => {
+    if (err) {
+      console.log(err);
+      return res.status(500).json({
+        ok: false,
+        msg: "Error al obtener las compras",
+        err,
+      });
+    } else {
+      let createCompra = false;
+      let queryCreateCompra = `INSERT INTO compras (proveedor, tipo_documento, documento, fecha_documento, monto_neto_documento, monto_imp_documento, costo_neto_documento, costo_imp_documento, tipo_compra, observaciones) VALUES `;
+
+      result.forEach((compra) => {
+        // if compra exists, remove it from responseData.compras.detalleCompras
+        const compraFromApi = compras.find(
+          (compraApi) =>
+            compraApi.rutProveedor === compra.proveedor &&
+            compraApi.folio === compra.documento
+        );
+        if (compraFromApi !== undefined) {
+          compras.splice(compras.indexOf(compraFromApi), 1);
+        }
+      });
+
+      compras.forEach(async (compra) => {
+        createCompra = true;
+        // format date to yyyy-mm-dd from dd/mm/yyyy
+        const date = compra.fechaEmision.split("/");
+        const dateFormatted = `${date[2]}-${date[1]}-${date[0]}`;
+
+        queryCreateCompra += `('${compra.rutProveedor}', '${compra.tipoDTE}', '${compra.folio}', '${dateFormatted}', '${compra.montoNeto}', '${compra.montoImp}', '${compra.montoNeto}', '${compra.montoImp}', 1
+        , 'Pendiente'),`;
+      });
+      queryCreateCompra = queryCreateCompra.slice(0, -1);
+
+      if (createCompra) {
+        await connection.query(queryCreateCompra, (err, result) => {
+          if (err) {
+            console.log(err);
+            return res.status(500).json({
+              ok: false,
+              msg: "Error al crear las compras",
+              err,
+            });
+          } else {
+            return res.status(200).json({
+              ok: true,
+              msg: compras.length + " Compras ingresadas",
+            });
+          }
+        });
+      } else {
+        return res.status(200).json({
+          ok: true,
+          msg: "Sin compras para ingresar",
+        });
+      }
+    }
+  });
 };

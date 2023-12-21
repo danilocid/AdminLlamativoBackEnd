@@ -38,3 +38,10 @@ exports.UpdateCompra = functions.https.onRequest((req, res) => {
     compras.updateCompra(req, res);
   });
 });
+
+// import compras from file
+exports.ImportFile = functions.https.onRequest((req, res) => {
+  cors(req, res, () => {
+    compras.importCompras(req, res);
+  });
+});
