@@ -26,7 +26,7 @@ exports.getAllFromApi = async (req, res) => {
         .get(url, {
           auth: {
             username: process.env.SIMPLE_API_USER,
-            password: process.env.SIMPLE_API_PASS_2,
+            password: process.env.SIMPLE_API_PASS,
           },
           data: {
             RutUsuario: process.env.SIMPLE_API_RUT_USUARIO,
@@ -74,7 +74,7 @@ exports.getAllFromApi = async (req, res) => {
               // if not, create entity
               if (entidades.length === 0) {
                 responseData.compras.detalleCompras.forEach(async (compra) => {
-                  if (!queryCreateEntity.contains(compra.rutProveedor)) {
+                  if (!queryCreateEntity.includes(compra.rutProveedor)) {
                     queryCreateEntity += `('${compra.rutProveedor}', '${compra.razonSocial}', 'Sin giro', 'P', 'Sin dirección', 204, 10, 94679847, 'cidybadilla@gmail.com'),`;
                     createEntity = true;
                   }
