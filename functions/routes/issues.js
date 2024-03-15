@@ -10,56 +10,96 @@ const cors = require("cors")({
 });
 // issues
 // all issues with token
-exports.GetAll = functions.https.onRequest((request, response) => {
-  cors(request, response, () => {
-    issues.getAllIssues(request, response);
+exports.GetAll = functions
+  .runWith({
+    memory: "512MB",
+    timeoutSeconds: 120,
+  })
+  .https.onRequest((request, response) => {
+    cors(request, response, () => {
+      issues.getAllIssues(request, response);
+    });
   });
-});
 
 // issue by id with token
-exports.GetById = functions.https.onRequest((request, response) => {
-  cors(request, response, () => {
-    issues.getIssueById(request, response);
+exports.GetById = functions
+  .runWith({
+    memory: "512MB",
+    timeoutSeconds: 120,
+  })
+  .https.onRequest((request, response) => {
+    cors(request, response, () => {
+      issues.getIssueById(request, response);
+    });
   });
-});
 
 // al status whith token
-exports.GetAllStatus = functions.https.onRequest((request, response) => {
-  cors(request, response, () => {
-    issues.getAllStatus(request, response);
+exports.GetAllStatus = functions
+  .runWith({
+    memory: "512MB",
+    timeoutSeconds: 120,
+  })
+  .https.onRequest((request, response) => {
+    cors(request, response, () => {
+      issues.getAllStatus(request, response);
+    });
   });
-});
 // all sections with token
-exports.GetAllSections = functions.https.onRequest((request, response) => {
-  cors(request, response, () => {
-    issues.getAllSections(request, response);
+exports.GetAllSections = functions
+  .runWith({
+    memory: "512MB",
+    timeoutSeconds: 120,
+  })
+  .https.onRequest((request, response) => {
+    cors(request, response, () => {
+      issues.getAllSections(request, response);
+    });
   });
-});
 
 // all types with token
-exports.GetAllTypes = functions.https.onRequest((request, response) => {
-  cors(request, response, () => {
-    issues.getAllTypes(request, response);
+exports.GetAllTypes = functions
+  .runWith({
+    memory: "512MB",
+    timeoutSeconds: 120,
+  })
+  .https.onRequest((request, response) => {
+    cors(request, response, () => {
+      issues.getAllTypes(request, response);
+    });
   });
-});
 
 // update issue with token
-exports.Update = functions.https.onRequest((request, response) => {
-  cors(request, response, () => {
-    issues.updateIssue(request, response);
+exports.Update = functions
+  .runWith({
+    memory: "512MB",
+    timeoutSeconds: 120,
+  })
+  .https.onRequest((request, response) => {
+    cors(request, response, () => {
+      issues.updateIssue(request, response);
+    });
   });
-});
 
 // create issue with token
-exports.Create = functions.https.onRequest((request, response) => {
-  cors(request, response, () => {
-    issues.createIssue(request, response);
+exports.Create = functions
+  .runWith({
+    memory: "512MB",
+    timeoutSeconds: 120,
+  })
+  .https.onRequest((request, response) => {
+    cors(request, response, () => {
+      issues.createIssue(request, response);
+    });
   });
-});
 
 // report issue with token
-exports.Report = functions.https.onRequest((request, response) => {
-  cors(request, response, () => {
-    issues.getReport(request, response);
+exports.Report = functions
+  .runWith({
+    memory: "512MB",
+    timeoutSeconds: 120,
+  })
+  .https.onRequest((request, response) => {
+    cors(request, response, () => {
+      issues.getReport(request, response);
+    });
   });
-});

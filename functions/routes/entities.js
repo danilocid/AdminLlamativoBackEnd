@@ -10,26 +10,46 @@ const cors = require("cors")({
 });
 
 // get all clients
-exports.GetAll = functions.https.onRequest((req, res) => {
-  cors(req, res, () => {
-    entities.getAll(req, res);
+exports.GetAll = functions
+  .runWith({
+    memory: "512MB",
+    timeoutSeconds: 120,
+  })
+  .https.onRequest((req, res) => {
+    cors(req, res, () => {
+      entities.getAll(req, res);
+    });
   });
-});
 // get client by rut
-exports.GetEntityByRut = functions.https.onRequest((req, res) => {
-  cors(req, res, () => {
-    entities.GetEntityByRut(req, res);
+exports.GetEntityByRut = functions
+  .runWith({
+    memory: "512MB",
+    timeoutSeconds: 120,
+  })
+  .https.onRequest((req, res) => {
+    cors(req, res, () => {
+      entities.GetEntityByRut(req, res);
+    });
   });
-});
 // add client
-exports.Create = functions.https.onRequest((req, res) => {
-  cors(req, res, () => {
-    entities.Create(req, res);
+exports.Create = functions
+  .runWith({
+    memory: "512MB",
+    timeoutSeconds: 120,
+  })
+  .https.onRequest((req, res) => {
+    cors(req, res, () => {
+      entities.Create(req, res);
+    });
   });
-});
 // update client
-exports.Update = functions.https.onRequest((req, res) => {
-  cors(req, res, () => {
-    entities.updateEntity(req, res);
+exports.Update = functions
+  .runWith({
+    memory: "512MB",
+    timeoutSeconds: 120,
+  })
+  .https.onRequest((req, res) => {
+    cors(req, res, () => {
+      entities.updateEntity(req, res);
+    });
   });
-});

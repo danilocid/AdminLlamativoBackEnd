@@ -10,20 +10,35 @@ const cors = require("cors")({
 
 const recepciones = require("../controller/RecepcionesController");
 
-exports.GetAll = functions.https.onRequest((request, response) => {
-  cors(request, response, () => {
-    recepciones.getAllRecepciones(request, response);
+exports.GetAll = functions
+  .runWith({
+    memory: "512MB",
+    timeoutSeconds: 120,
+  })
+  .https.onRequest((request, response) => {
+    cors(request, response, () => {
+      recepciones.getAllRecepciones(request, response);
+    });
   });
-});
 
-exports.GetOne = functions.https.onRequest((request, response) => {
-  cors(request, response, () => {
-    recepciones.getOneRecepcion(request, response);
+exports.GetOne = functions
+  .runWith({
+    memory: "512MB",
+    timeoutSeconds: 120,
+  })
+  .https.onRequest((request, response) => {
+    cors(request, response, () => {
+      recepciones.getOneRecepcion(request, response);
+    });
   });
-});
 
-exports.Add = functions.https.onRequest((request, response) => {
-  cors(request, response, () => {
-    recepciones.addRecepcion(request, response);
+exports.Add = functions
+  .runWith({
+    memory: "512MB",
+    timeoutSeconds: 120,
+  })
+  .https.onRequest((request, response) => {
+    cors(request, response, () => {
+      recepciones.addRecepcion(request, response);
+    });
   });
-});

@@ -9,8 +9,13 @@ const cors = require("cors")({
   credentials: true,
 });
 
-exports.login = functions.https.onRequest((request, response) => {
-  cors(request, response, () => {
-    login.login(request, response);
+exports.login = functions
+  .runWith({
+    memory: "512MB",
+    timeoutSeconds: 120,
+  })
+  .https.onRequest((request, response) => {
+    cors(request, response, () => {
+      login.login(request, response);
+    });
   });
-});

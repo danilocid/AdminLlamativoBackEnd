@@ -11,39 +11,69 @@ const cors = require("cors")({
 const reports = require("../controller/ReportsController");
 
 // monthly sales
-exports.MonthlySales = functions.https.onRequest((req, res) => {
-  cors(req, res, () => {
-    reports.monthlySales(req, res);
+exports.MonthlySales = functions
+  .runWith({
+    memory: "512MB",
+    timeoutSeconds: 120,
+  })
+  .https.onRequest((req, res) => {
+    cors(req, res, () => {
+      reports.monthlySales(req, res);
+    });
   });
-});
 
 // report data types
-exports.GetReportDataTypes = functions.https.onRequest((req, res) => {
-  cors(req, res, () => {
-    reports.getReportDataTypes(req, res);
+exports.GetReportDataTypes = functions
+  .runWith({
+    memory: "512MB",
+    timeoutSeconds: 120,
+  })
+  .https.onRequest((req, res) => {
+    cors(req, res, () => {
+      reports.getReportDataTypes(req, res);
+    });
   });
-});
 
-exports.CreateReportDataType = functions.https.onRequest((req, res) => {
-  cors(req, res, () => {
-    reports.createReportDataType(req, res);
+exports.CreateReportDataType = functions
+  .runWith({
+    memory: "512MB",
+    timeoutSeconds: 120,
+  })
+  .https.onRequest((req, res) => {
+    cors(req, res, () => {
+      reports.createReportDataType(req, res);
+    });
   });
-});
 
-exports.UpdateReportDataType = functions.https.onRequest((req, res) => {
-  cors(req, res, () => {
-    reports.updateReportDataType(req, res);
+exports.UpdateReportDataType = functions
+  .runWith({
+    memory: "512MB",
+    timeoutSeconds: 120,
+  })
+  .https.onRequest((req, res) => {
+    cors(req, res, () => {
+      reports.updateReportDataType(req, res);
+    });
   });
-});
 
-exports.GetReportData = functions.https.onRequest((req, res) => {
-  cors(req, res, () => {
-    reports.getReportData(req, res);
+exports.GetReportData = functions
+  .runWith({
+    memory: "512MB",
+    timeoutSeconds: 120,
+  })
+  .https.onRequest((req, res) => {
+    cors(req, res, () => {
+      reports.getReportData(req, res);
+    });
   });
-});
 
-exports.CreateReportData = functions.https.onRequest((req, res) => {
-  cors(req, res, () => {
-    reports.createReportData(req, res);
+exports.CreateReportData = functions
+  .runWith({
+    memory: "512MB",
+    timeoutSeconds: 120,
+  })
+  .https.onRequest((req, res) => {
+    cors(req, res, () => {
+      reports.createReportData(req, res);
+    });
   });
-});

@@ -11,37 +11,62 @@ const compras = require("../controller/ComprasController");
 
 // get all compras from simpleapi
 
-exports.GetAllFromApi = functions.https.onRequest((req, res) => {
-  cors(req, res, () => {
-    compras.getAllFromApi(req, res);
+exports.GetAllFromApi = functions
+  .runWith({
+    memory: "512MB",
+    timeoutSeconds: 120,
+  })
+  .https.onRequest((req, res) => {
+    cors(req, res, () => {
+      compras.getAllFromApi(req, res);
+    });
   });
-});
 
 // get all compras from db
-exports.GetAllFromDb = functions.https.onRequest((req, res) => {
-  cors(req, res, () => {
-    compras.getAll(req, res);
+exports.GetAllFromDb = functions
+  .runWith({
+    memory: "512MB",
+    timeoutSeconds: 120,
+  })
+  .https.onRequest((req, res) => {
+    cors(req, res, () => {
+      compras.getAll(req, res);
+    });
   });
-});
 
 // get all compras types
 
-exports.GetAllTypes = functions.https.onRequest((req, res) => {
-  cors(req, res, () => {
-    compras.getAllComprasType(req, res);
+exports.GetAllTypes = functions
+  .runWith({
+    memory: "512MB",
+    timeoutSeconds: 120,
+  })
+  .https.onRequest((req, res) => {
+    cors(req, res, () => {
+      compras.getAllComprasType(req, res);
+    });
   });
-});
 
 //  update compra
-exports.UpdateCompra = functions.https.onRequest((req, res) => {
-  cors(req, res, () => {
-    compras.updateCompra(req, res);
+exports.UpdateCompra = functions
+  .runWith({
+    memory: "512MB",
+    timeoutSeconds: 120,
+  })
+  .https.onRequest((req, res) => {
+    cors(req, res, () => {
+      compras.updateCompra(req, res);
+    });
   });
-});
 
 // import compras from file
-exports.ImportFile = functions.https.onRequest((req, res) => {
-  cors(req, res, () => {
-    compras.importCompras(req, res);
+exports.ImportFile = functions
+  .runWith({
+    memory: "512MB",
+    timeoutSeconds: 120,
+  })
+  .https.onRequest((req, res) => {
+    cors(req, res, () => {
+      compras.importCompras(req, res);
+    });
   });
-});

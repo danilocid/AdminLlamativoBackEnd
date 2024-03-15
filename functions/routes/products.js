@@ -11,83 +11,143 @@ const cors = require("cors")({
 
 // products
 // all products with token
-exports.GetAll = functions.https.onRequest((request, response) => {
-  cors(request, response, () => {
-    products.getAllProducts(request, response);
+exports.GetAll = functions
+  .runWith({
+    memory: "512MB",
+    timeoutSeconds: 120,
+  })
+  .https.onRequest((request, response) => {
+    cors(request, response, () => {
+      products.getAllProducts(request, response);
+    });
   });
-});
-exports.GetAllWhitStock = functions.https.onRequest((request, response) => {
-  cors(request, response, () => {
-    products.getAllProducts(request, response, true);
+exports.GetAllWhitStock = functions
+  .runWith({
+    memory: "512MB",
+    timeoutSeconds: 120,
+  })
+  .https.onRequest((request, response) => {
+    cors(request, response, () => {
+      products.getAllProducts(request, response, true);
+    });
   });
-});
 
 // product by id with token
-exports.Get = functions.https.onRequest((request, response) => {
-  cors(request, response, () => {
-    products.getProduct(request, response);
+exports.Get = functions
+  .runWith({
+    memory: "512MB",
+    timeoutSeconds: 120,
+  })
+  .https.onRequest((request, response) => {
+    cors(request, response, () => {
+      products.getProduct(request, response);
+    });
   });
-});
 
 // update product with token
-exports.Update = functions.https.onRequest((request, response) => {
-  cors(request, response, () => {
-    products.updateProduct(request, response);
+exports.Update = functions
+  .runWith({
+    memory: "512MB",
+    timeoutSeconds: 120,
+  })
+  .https.onRequest((request, response) => {
+    cors(request, response, () => {
+      products.updateProduct(request, response);
+    });
   });
-});
 
 // create product with token
-exports.Create = functions.https.onRequest((request, response) => {
-  cors(request, response, () => {
-    products.createProduct(request, response);
+exports.Create = functions
+  .runWith({
+    memory: "512MB",
+    timeoutSeconds: 120,
+  })
+  .https.onRequest((request, response) => {
+    cors(request, response, () => {
+      products.createProduct(request, response);
+    });
   });
-});
 
 // get product by id whit movements with token
-exports.GetMovements = functions.https.onRequest((request, response) => {
-  cors(request, response, () => {
-    products.getProductWithMovements(request, response);
+exports.GetMovements = functions
+  .runWith({
+    memory: "512MB",
+    timeoutSeconds: 120,
+  })
+  .https.onRequest((request, response) => {
+    cors(request, response, () => {
+      products.getProductWithMovements(request, response);
+    });
   });
-});
 
 // get last count of product with token
-exports.GetLastCount = functions.https.onRequest((request, response) => {
-  cors(request, response, () => {
-    products.getLastCountedProducts(request, response);
+exports.GetLastCount = functions
+  .runWith({
+    memory: "512MB",
+    timeoutSeconds: 120,
+  })
+  .https.onRequest((request, response) => {
+    cors(request, response, () => {
+      products.getLastCountedProducts(request, response);
+    });
   });
-});
 
 // get all movements types with token
-exports.GetMovementsTypes = functions.https.onRequest((request, response) => {
-  cors(request, response, () => {
-    products.getAllMovementsTypes(request, response);
+exports.GetMovementsTypes = functions
+  .runWith({
+    memory: "512MB",
+    timeoutSeconds: 120,
+  })
+  .https.onRequest((request, response) => {
+    cors(request, response, () => {
+      products.getAllMovementsTypes(request, response);
+    });
   });
-});
 
 // save movement with token
-exports.SaveMovement = functions.https.onRequest((request, response) => {
-  cors(request, response, () => {
-    products.saveMovement(request, response);
+exports.SaveMovement = functions
+  .runWith({
+    memory: "512MB",
+    timeoutSeconds: 120,
+  })
+  .https.onRequest((request, response) => {
+    cors(request, response, () => {
+      products.saveMovement(request, response);
+    });
   });
-});
 
 // get all movements with token
-exports.GetAllMovements = functions.https.onRequest((request, response) => {
-  cors(request, response, () => {
-    products.getAllMovements(request, response);
+exports.GetAllMovements = functions
+  .runWith({
+    memory: "512MB",
+    timeoutSeconds: 120,
+  })
+  .https.onRequest((request, response) => {
+    cors(request, response, () => {
+      products.getAllMovements(request, response);
+    });
   });
-});
 
 // get detail of movement with token
-exports.GetMovementDetail = functions.https.onRequest((request, response) => {
-  cors(request, response, () => {
-    products.getMovementDetails(request, response);
+exports.GetMovementDetail = functions
+  .runWith({
+    memory: "512MB",
+    timeoutSeconds: 120,
+  })
+  .https.onRequest((request, response) => {
+    cors(request, response, () => {
+      products.getMovementDetails(request, response);
+    });
   });
-});
 
 // get resume of products
-exports.GetResume = functions.https.onRequest((request, response) => {
-  cors(request, response, () => {
-    products.getResumeInventario(request, response);
+exports.GetResume = functions
+  .runWith({
+    memory: "512MB",
+    timeoutSeconds: 120,
+  })
+  .https.onRequest((request, response) => {
+    cors(request, response, () => {
+      products.getResumeInventario(request, response);
+    });
   });
-});

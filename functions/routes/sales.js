@@ -9,20 +9,35 @@ const cors = require("cors")({
   credentials: true,
 });
 
-exports.addSale = functions.https.onRequest((request, response) => {
-  cors(request, response, () => {
-    utils.addSale(request, response);
+exports.addSale = functions
+  .runWith({
+    memory: "512MB",
+    timeoutSeconds: 120,
+  })
+  .https.onRequest((request, response) => {
+    cors(request, response, () => {
+      utils.addSale(request, response);
+    });
   });
-});
 
-exports.getSales = functions.https.onRequest((request, response) => {
-  cors(request, response, () => {
-    utils.getSales(request, response);
+exports.getSales = functions
+  .runWith({
+    memory: "512MB",
+    timeoutSeconds: 120,
+  })
+  .https.onRequest((request, response) => {
+    cors(request, response, () => {
+      utils.getSales(request, response);
+    });
   });
-});
 
-exports.getSaleById = functions.https.onRequest((request, response) => {
-  cors(request, response, () => {
-    utils.getSaleById(request, response);
+exports.getSaleById = functions
+  .runWith({
+    memory: "512MB",
+    timeoutSeconds: 120,
+  })
+  .https.onRequest((request, response) => {
+    cors(request, response, () => {
+      utils.getSaleById(request, response);
+    });
   });
-});

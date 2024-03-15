@@ -10,31 +10,49 @@ const cors = require("cors")({
 });
 
 // get all regions
-exports.getAllRegions = functions.https.onRequest((request, response) => {
-  cors(request, response, () => {
-    utils.getAllRegions(request, response);
+exports.getAllRegions = functions
+  .runWith({
+    memory: "512MB",
+    timeoutSeconds: 120,
+  })
+  .https.onRequest((request, response) => {
+    cors(request, response, () => {
+      utils.getAllRegions(request, response);
+    });
   });
-});
 
 // get all comunas by regionid
-exports.getAllComunasByRegionId = functions.https.onRequest(
-  (request, response) => {
+exports.getAllComunasByRegionId = functions
+  .runWith({
+    memory: "512MB",
+    timeoutSeconds: 120,
+  })
+  .https.onRequest((request, response) => {
     cors(request, response, () => {
       utils.getAllComunasByRegionId(request, response);
     });
-  }
-);
+  });
 
 // get all tipo de documento
-exports.getAllTipoDocumento = functions.https.onRequest((request, response) => {
-  cors(request, response, () => {
-    utils.getAllTipoDocumento(request, response);
+exports.getAllTipoDocumento = functions
+  .runWith({
+    memory: "512MB",
+    timeoutSeconds: 120,
+  })
+  .https.onRequest((request, response) => {
+    cors(request, response, () => {
+      utils.getAllTipoDocumento(request, response);
+    });
   });
-});
 
 // get all medio de pago
-exports.getAllMedioPago = functions.https.onRequest((request, response) => {
-  cors(request, response, () => {
-    utils.getAllMedioPago(request, response);
+exports.getAllMedioPago = functions
+  .runWith({
+    memory: "512MB",
+    timeoutSeconds: 120,
+  })
+  .https.onRequest((request, response) => {
+    cors(request, response, () => {
+      utils.getAllMedioPago(request, response);
+    });
   });
-});
