@@ -151,3 +151,15 @@ exports.GetResume = functions
       products.getResumeInventario(request, response);
     });
   });
+
+// update products withowt stock
+exports.UpdateWithoutStock = functions
+  .runWith({
+    memory: "512MB",
+    timeoutSeconds: 120,
+  })
+  .https.onRequest((request, response) => {
+    cors(request, response, () => {
+      products.updateProductWithoutStock(request, response);
+    });
+  });

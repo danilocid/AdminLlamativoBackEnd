@@ -212,6 +212,8 @@ exports.updateProduct = function (req, res) {
   const venta_imp = req.body.venta_imp;
   const stock_critico = req.body.stock_critico;
   const activo = req.body.activo;
+  const publicado = req.body.publicado;
+  let enlace_ml = req.body.enlace_ml;
   if (token === undefined) {
     return res.status(403).json({
       ok: false,
@@ -258,8 +260,13 @@ exports.updateProduct = function (req, res) {
       const { uid } = jwt.verify(token, process.env.JWT_SECRET);
       req.uid = uid;
       console.log("uid: " + uid);
+      if (publicado === 0) {
+        enlace_ml = null;
+      }
       const connection = DbConnection.initFunction();
-      const query = `UPDATE articulos SET cod_interno = '${cod_interno}', cod_barras = '${cod_barras}', descripcion = '${descripcion}', costo_neto = '${costo_neto}', costo_imp = '${costo_imp}', venta_neto = '${venta_neto}', venta_imp = '${venta_imp}', stock_critico = '${stock_critico}', activo = '${activo}' WHERE id = ${id}`;
+      const query = `UPDATE articulos SET cod_interno = '${cod_interno}', cod_barras = '${cod_barras}', descripcion = '${descripcion}', costo_neto = '${costo_neto}', costo_imp = '${costo_imp}', venta_neto = '${venta_neto}', venta_imp = '${venta_imp}', stock_critico = '${stock_critico}', activo = '${activo}', 
+      publicado = '${publicado}', enlace_ml = '${enlace_ml}', updated_at = NOW()
+       WHERE id = ${id}`;
       connection.query(query, (err, result) => {
         connection.end();
         if (err) {
@@ -302,6 +309,8 @@ exports.createProduct = function (req, res) {
   const venta_imp = req.body.venta_imp;
   const stock_critico = req.body.stock_critico;
   const activo = req.body.activo;
+  const publicado = req.body.publicado;
+  let enlace_ml = req.body.enlace_ml;
   if (token === undefined) {
     return res.status(403).json({
       ok: false,
@@ -344,9 +353,11 @@ exports.createProduct = function (req, res) {
     try {
       const { uid } = jwt.verify(token, process.env.JWT_SECRET);
       req.uid = uid;
-      console.log("uid: " + uid);
+      if (publicado === 0) {
+        enlace_ml = null;
+      }
       const connection = DbConnection.initFunction();
-      const query = `INSERT INTO articulos (cod_interno, cod_barras, descripcion, costo_neto, costo_imp, venta_neto, venta_imp, stock_critico, stock, activo, created_at, updated_at) VALUES ('${cod_interno}', '${cod_barras}', '${descripcion}', '${costo_neto}', '${costo_imp}', '${venta_neto}', '${venta_imp}', '${stock_critico}', 0, '${activo}', NOW(), NOW())`;
+      const query = `INSERT INTO articulos (cod_interno, cod_barras, descripcion, costo_neto, costo_imp, venta_neto, venta_imp, stock_critico, stock, activo, publicado, enlace_ml, created_at, updated_at) VALUES ('${cod_interno}', '${cod_barras}', '${descripcion}', '${costo_neto}', '${costo_imp}', '${venta_neto}', '${venta_imp}', '${stock_critico}', 0, '${activo}', '${publicado}', '${enlace_ml}', NOW(), NOW())`;
       connection.query(query, (err, result) => {
         connection.end();
         if (err) {
@@ -800,4 +811,32 @@ exports.getResumeInventario = async function (req, res) {
       });
     }
   }
+};
+
+exports.updateProductWithoutStock = function (req, res) {
+  // update products without stock
+  // don't receive token
+  // set publicado = 0
+  // set enlace_ml = null
+  // set activo = 0
+  // where stock = 0
+
+  const connection = DbConnection.initFunction();
+  const query = `UPDATE articulos SET publicado = 0, enlace_ml = null, activo = 0, updated_at = NOW() WHERE stock = 0`;
+  connection.query(query, (err, result) => {
+    connection.end();
+    if (err) {
+      return res.status(500).json({
+        ok: false,
+        msg: "Error al consultar la base de datos",
+        err,
+      });
+    } else {
+      // TODO: falta generar notificaciones
+      return res.status(200).json({
+        ok: true,
+        msg: "Productos actualizados",
+      });
+    }
+  });
 };
