@@ -826,6 +826,7 @@ exports.updateProductWithoutStock = function (req, res) {
   connection.query(query, (err, result) => {
     connection.end();
     if (err) {
+      console.log(err);
       return res.status(500).json({
         ok: false,
         msg: "Error al consultar la base de datos",
@@ -833,6 +834,8 @@ exports.updateProductWithoutStock = function (req, res) {
       });
     } else {
       // TODO: falta generar notificaciones
+      console.log("Productos actualizados");
+      console.log(result);
       return res.status(200).json({
         ok: true,
         msg: "Productos actualizados",
