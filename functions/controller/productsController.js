@@ -822,7 +822,7 @@ exports.updateProductWithoutStock = function (req, res) {
   // where stock = 0
 
   const connection = DbConnection.initFunction();
-  const query = `UPDATE articulos SET publicado = 0, enlace_ml = null, activo = 0, updated_at = NOW() WHERE stock = 0`;
+  const query = `UPDATE articulos SET publicado = 0, enlace_ml = null, activo = 0, updated_at = NOW() WHERE stock = 0 AND activo = 1`;
   connection.query(query, (err, result) => {
     connection.end();
     if (err) {

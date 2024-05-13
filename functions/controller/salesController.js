@@ -113,7 +113,9 @@ exports.getSales = (req, res) => {
       query += "INNER JOIN medios_de_pago md ";
       query +=
         "INNER JOIN entidades c WHERE tipo_documento = td.id AND medio_pago = md.id AND cliente = c.rut";
+      console.log(query);
       connection.query(query, (err, result) => {
+        console.log(result);
         if (err) {
           console.log(err);
           return res.status(500).json({
