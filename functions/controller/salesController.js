@@ -30,7 +30,7 @@ exports.addSale = (req, res) => {
       // get db connection
       const connection = DbConnection.initFunction();
       // execute query
-      const query = `INSERT INTO ventas ( monto_neto, monto_imp, costo_neto, costo_imp, tipo_documento, documento, cliente, medio_pago, usuario) VALUES (${totalNet}, ${totalTax}, ${totalNetCost}, ${totalTaxCost}, '${documentTypeId}', '${documentNumber}', '${rut}', ${paymentMethodId}, ${uid})`;
+      const query = `INSERT INTO ventas ( monto_neto, monto_imp, costo_neto, costo_imp, tipo_documento, documento, cliente, medio_pago, usuario) VALUES (${totalNet}, ${totalTax}, ${totalNetCost}, ${totalTaxCost}, '${documentTypeId}', '${documentNumber}', '${rut}', ${paymentMethodId}, 1)`;
       connection.query(query, (err, result, fields) => {
         if (err) {
           console.log(err);
