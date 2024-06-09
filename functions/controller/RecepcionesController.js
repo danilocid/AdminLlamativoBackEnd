@@ -184,7 +184,7 @@ exports.addRecepcion = async (req, res) => {
                           });
                         } else {
                           // add the movement of the article
-                          const query = `INSERT INTO detalle_movimientos_articulos (movimiento_id, id_movimiento, producto_id, cantidad, usuario_id, created_at, updated_at) VALUES ('1', '${id}', '${article.productId}', '${article.quantity}', '${uid}',  NOW(), NOW())`;
+                          const query = `INSERT INTO detalle_movimientos_articulos (movimiento_id, id_movimiento, producto_id, cantidad, usuario_id, created_at, updated_at) VALUES ('1', '${id}', '${article.productId}', '${article.quantity}', 1,  NOW(), NOW())`;
                           connection.query(query, (err, result) => {
                             if (err) {
                               console.log("Error: " + err);

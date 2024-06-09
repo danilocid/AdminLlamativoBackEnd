@@ -60,7 +60,7 @@ exports.addSale = (req, res) => {
             }
           });
 
-          const query3 = `INSERT INTO detalle_movimientos_articulos (movimiento_id, id_movimiento, producto_id, cantidad, usuario_id, created_at, updated_at) VALUES ('2', '${venta_id}', '${producto.productId}', '${producto.quantity}', '${uid}',  NOW(), NOW())`;
+          const query3 = `INSERT INTO detalle_movimientos_articulos (movimiento_id, id_movimiento, producto_id, cantidad, usuario_id, created_at, updated_at) VALUES ('2', '${venta_id}', '${producto.productId}', '${producto.quantity}', 1,  NOW(), NOW())`;
           connection.query(query3, (err, result, fields) => {
             if (err) {
               console.log(err);
@@ -113,9 +113,7 @@ exports.getSales = (req, res) => {
       query += "INNER JOIN medios_de_pago md ";
       query +=
         "INNER JOIN entidades c WHERE tipo_documento = td.id AND medio_pago = md.id AND cliente = c.rut";
-      console.log(query);
       connection.query(query, (err, result) => {
-        console.log(result);
         if (err) {
           console.log(err);
           return res.status(500).json({

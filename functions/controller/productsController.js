@@ -27,7 +27,7 @@ exports.getAllProducts = function (req, res, conStock = false, activo = true) {
         conStock = false;
       }
       //  console.log("conStock: " + conStock);
-      //  console.log("uid: " + uid);
+      console.log("uid: " + uid);
       const connection = DbConnection.initFunction();
       let query = `SELECT * FROM articulos`;
       if (!conStock || conStock === "false") {
@@ -526,7 +526,7 @@ exports.saveMovement = function (req, res) {
       } else {
         // save movement in db
         const connection = DbConnection.initFunction();
-        const query = `INSERT INTO ajustes_de_inventarios (tipo_movimiento_id, observaciones,  costo_neto, costo_imp, entradas, salidas, created_at, updated_at, user_id) VALUES ('${tipo_movimiento}', '${obs}',  '${costo_neto}', '${costo_imp}', '${entradas}', '${salidas}', NOW(), NOW(), '${uid}')`;
+        const query = `INSERT INTO ajustes_de_inventarios (tipo_movimiento_id, observaciones,  costo_neto, costo_imp, entradas, salidas, created_at, updated_at, user_id) VALUES ('${tipo_movimiento}', '${obs}',  '${costo_neto}', '${costo_imp}', '${entradas}', '${salidas}', NOW(), NOW(), 1)`;
         connection.query(query, (err, result) => {
           if (err) {
             return res.status(500).json({
@@ -586,7 +586,7 @@ exports.saveMovement = function (req, res) {
                     } else {
                       cantidad = articulo.salidas;
                     }
-                    const query4 = `INSERT INTO detalle_movimientos_articulos (movimiento_id, id_movimiento, producto_id, cantidad, usuario_id, created_at, updated_at) VALUES ('${tipo_movimiento}', '${idAjuste}', '${articulo.id}', '${cantidad}', '${uid}',  NOW(), NOW())`;
+                    const query4 = `INSERT INTO detalle_movimientos_articulos (movimiento_id, id_movimiento, producto_id, cantidad, usuario_id, created_at, updated_at) VALUES ('${tipo_movimiento}', '${idAjuste}', '${articulo.id}', '${cantidad}', 1,  NOW(), NOW())`;
                     connection.query(query4, (err, result) => {
                       if (err) {
                         error = true;
@@ -635,9 +635,9 @@ exports.getAllMovements = function (req, res) {
     });
   } else {
     try {
-      const { uid } = jwt.verify(token, process.env.JWT_SECRET);
+      const uid = jwt.verify(token, process.env.JWT_SECRET);
       req.uid = uid;
-      console.log("uid: " + uid);
+      console.log("uid:w " + uid);
       const connection = DbConnection.initFunction();
       let query =
         "SELECT aj.id as id, aj.costo_neto, aj.observaciones, aj.costo_imp, aj.entradas, aj.salidas, aj.created_at, u.name, tm.tipo_movimiento FROM ajustes_de_inventarios aj ";
