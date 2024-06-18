@@ -23,19 +23,17 @@ exports.getAllFromApi = async (req, res) => {
         "https://servicios.simpleapi.cl/api/RCV/compras/" + month + "/" + year;
 
       await axios
-        .get(url, {
-          auth: {
-            username: process.env.SIMPLE_API_USER,
-            password: process.env.SIMPLE_API_PASS,
-          },
-          data: {
+        .post(
+          url,
+          {
             RutUsuario: process.env.SIMPLE_API_RUT_USUARIO,
             PasswordSII: process.env.SIMPLE_API_PASS_SII,
             RutEmpresa: process.env.SIMPLE_API_RUT_EMPRESA,
             Ambiente: 1,
             Detallado: true,
           },
-        })
+          { headers: { Authorization: process.env.SIMPLE_API_PASS } }
+        )
         .then(async (response) => {
           responseData = response.data;
 
