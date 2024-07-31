@@ -169,14 +169,13 @@ exports.getProductWithMovements = function (req, res) {
         }
         let query = `SELECT detalle_movimientos_articulos.*, tipo_movimientos.tipo_movimiento, users.name FROM detalle_movimientos_articulos `;
         query += `LEFT JOIN tipo_movimientos ON (tipo_movimientos.id = detalle_movimientos_articulos.movimiento_id) `;
-        query += `LEFT JOIN users ON (users.id = detalle_movimientos_articulos.usuario_id) `;
         query += `WHERE detalle_movimientos_articulos.producto_id = ${id}`;
         connection.query(query, (err, movements) => {
           if (err) {
             connection.end();
             return res.status(500).json({
               ok: false,
-              msg: "Error al consultar la base de datos",
+              msg: "Error al consultar la base de datos de movimientos",
               err,
             });
           }
